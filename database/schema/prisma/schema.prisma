@@ -1,0 +1,631 @@
+// Prisma Schema
+// Based on PostgreSQL DDL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// Users and Profiles
+// ============================================================================
+
+model User {
+  userId                  String   @id @default(uuid()) @map("user_id")
+  email                   String   @unique @db.VarChar(255)
+  passwordHash            String   @map("password_hash") @db.VarChar(255)
+  fullName                String   @map("full_name") @db.VarChar(255)
+  userType                UserType @map("user_type") @db.VarChar(20)
+  status                  UserStatus @default(PENDING_VERIFICATION) @db.VarChar(20)
+  emailVerified           Boolean  @default(false) @map("email_verified")
+  emailVerifiedAt         DateTime? @map("email_verified_at")
+  verificationCode        String?  @map("verification_code") @db.VarChar(10)
+  verificationCodeExpiresAt DateTime? @map("verification_code_expires_at")
+  profileComplete         Boolean  @default(false) @map("profile_complete")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+  lastLoginAt             DateTime? @map("last_login_at")
+  metadata                Json?
+
+  talentaProfile          TalentaProfile?
+  mitraProfile            MitraProfile?
+  industriProfile         IndustriProfile?
+
+  @@index([email])
+  @@index([userType])
+  @@index([status])
+  @@map("users")
+}
+
+enum UserType {
+  TALENTA
+  MITRA
+  INDUSTRI
+}
+
+enum UserStatus {
+  PENDING_VERIFICATION
+  VERIFIED
+  ACTIVE
+  SUSPENDED
+  REJECTED
+}
+
+model TalentaProfile {
+  profileId        String   @id @default(uuid()) @map("profile_id")
+  userId           String   @unique @map("user_id")
+  nik              String?  @unique @db.VarChar(50)
+  nikVerified      Boolean  @default(false) @map("nik_verified")
+  nikVerifiedAt    DateTime? @map("nik_verified_at")
+  dateOfBirth      DateTime? @map("date_of_birth")
+  phone            String?  @db.VarChar(20)
+  address          String?  @db.Text
+  city             String?  @db.VarChar(100)
+  province         String?  @db.VarChar(100)
+  postalCode       String?  @map("postal_code") @db.VarChar(10)
+  ekycVerified     Boolean  @default(false) @map("ekyc_verified")
+  ekycVerifiedAt   DateTime? @map("ekyc_verified_at")
+  biometricType    BiometricType? @map("biometric_type") @db.VarChar(50)
+  biometricHash    String?  @map("biometric_hash") @db.VarChar(64)
+  skills           Json?
+  aqrfLevel        Int?     @map("aqrf_level")
+  resumeUrl        String?  @map("resume_url") @db.VarChar(500)
+  portfolioUrl     String?  @map("portfolio_url") @db.VarChar(500)
+  jobPreferences   Json?    @map("job_preferences")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  user             User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  certificates     Sertifikat[]
+  applications     Pelamar[]
+  workshopRegistrations WorkshopRegistration[]
+  talentPoolEntries TalentPool[]
+
+  @@index([userId])
+  @@index([nik])
+  @@map("talenta_profiles")
+}
+
+enum BiometricType {
+  FINGERPRINT
+  FACE
+  IRIS
+}
+
+model MitraProfile {
+  profileId                String   @id @default(uuid()) @map("profile_id")
+  userId                   String   @unique @map("user_id")
+  organizationName         String   @map("organization_name") @db.VarChar(255)
+  registrationNumber       String   @unique @map("registration_number") @db.VarChar(100)
+  taxId                    String?  @map("tax_id") @db.VarChar(50)
+  accreditationStatus      AccreditationStatus @default(PENDING) @map("accreditation_status") @db.VarChar(50)
+  accreditationExpiresAt   DateTime? @map("accreditation_expires_at")
+  address                  String?  @db.Text
+  city                     String?  @db.VarChar(100)
+  province                 String?  @db.VarChar(100)
+  postalCode               String?  @map("postal_code") @db.VarChar(10)
+  phone                    String?  @db.VarChar(20)
+  website                  String?  @db.VarChar(255)
+  contactPersonName        String?  @map("contact_person_name") @db.VarChar(255)
+  contactPersonEmail       String?  @map("contact_person_email") @db.VarChar(255)
+  contactPersonPhone       String?  @map("contact_person_phone") @db.VarChar(20)
+  contactPersonPosition    String?  @map("contact_person_position") @db.VarChar(100)
+  registrationCertificateUrl String? @map("registration_certificate_url") @db.VarChar(500)
+  taxCertificateUrl        String?  @map("tax_certificate_url") @db.VarChar(500)
+  accreditationLetterUrl   String?  @map("accreditation_letter_url") @db.VarChar(500)
+  verificationStatus       VerificationStatus @default(PENDING_REVIEW) @map("verification_status") @db.VarChar(50)
+  verifiedAt               DateTime? @map("verified_at")
+  verifiedBy               String?  @map("verified_by") @db.Uuid
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  user                     User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  courses                  Kursus[]
+  workshops                Workshop[]
+  certificates             Sertifikat[]
+
+  @@index([userId])
+  @@index([registrationNumber])
+  @@index([accreditationStatus])
+  @@map("mitra_profiles")
+}
+
+enum AccreditationStatus {
+  PENDING
+  ACCREDITED
+  EXPIRED
+  REVOKED
+}
+
+enum VerificationStatus {
+  PENDING_REVIEW
+  VERIFIED
+  REJECTED
+}
+
+model IndustriProfile {
+  profileId                String   @id @default(uuid()) @map("profile_id")
+  userId                   String   @unique @map("user_id")
+  companyName               String   @map("company_name") @db.VarChar(255)
+  companyTaxId             String   @unique @map("company_tax_id") @db.VarChar(50)
+  companyType               String?  @map("company_type") @db.VarChar(100)
+  industrySector            String?  @map("industry_sector") @db.VarChar(100)
+  address                   String?  @db.Text
+  city                      String?  @db.VarChar(100)
+  province                  String?  @db.VarChar(100)
+  postalCode                String?  @map("postal_code") @db.VarChar(10)
+  phone                     String?  @db.VarChar(20)
+  website                   String?  @db.VarChar(255)
+  contactPersonName         String?  @map("contact_person_name") @db.VarChar(255)
+  contactPersonEmail        String?  @map("contact_person_email") @db.VarChar(255)
+  contactPersonPhone        String?  @map("contact_person_phone") @db.VarChar(20)
+  contactPersonPosition     String?  @map("contact_person_position") @db.VarChar(100)
+  companyRegistrationUrl    String?  @map("company_registration_url") @db.VarChar(500)
+  taxCertificateUrl         String?  @map("tax_certificate_url") @db.VarChar(500)
+  businessLicenseUrl        String?  @map("business_license_url") @db.VarChar(500)
+  verificationStatus        VerificationStatus @default(PENDING_REVIEW) @map("verification_status") @db.VarChar(50)
+  verifiedAt                DateTime? @map("verified_at")
+  verifiedBy                String?  @map("verified_by") @db.Uuid
+  taxIncentiveEligible      Boolean  @default(false) @map("tax_incentive_eligible")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
+
+  user                      User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  jobPostings               Lowongan[]
+  talentPool                TalentPool[]
+
+  @@index([userId])
+  @@index([companyTaxId])
+  @@index([verificationStatus])
+  @@map("industri_profiles")
+}
+
+// ============================================================================
+// Courses and Materials
+// ============================================================================
+
+model Kursus {
+  kursusId              String   @id @default(uuid()) @map("kursus_id")
+  mitraId               String   @map("mitra_id")
+  title                 String   @db.VarChar(255)
+  titleEn               String?  @map("title_en") @db.VarChar(255)
+  description           String?  @db.Text
+  descriptionEn         String?  @map("description_en") @db.Text
+  category              String?  @db.VarChar(100)
+  skkniCode             String?  @map("skkni_code") @db.VarChar(100)
+  skkniName             String?  @map("skkni_name") @db.VarChar(255)
+  aqrfLevel             Int?     @map("aqrf_level")
+  durationHours         Int      @map("duration_hours")
+  durationDays          Int?     @map("duration_days")
+  price                 Decimal  @default(0) @db.Decimal(15, 2)
+  currency              String   @default("IDR") @db.VarChar(3)
+  prerequisites         Json?
+  learningOutcomes      Json?    @map("learning_outcomes")
+  status                KursusStatus @default(DRAFT) @db.VarChar(50)
+  siplatihProgramId     String?  @map("siplatih_program_id") @db.VarChar(100)
+  siplatihRegistered    Boolean  @default(false) @map("siplatih_registered")
+  siplatihRegisteredAt  DateTime? @map("siplatih_registered_at")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+  publishedAt           DateTime? @map("published_at")
+
+  mitra                 MitraProfile @relation(fields: [mitraId], references: [profileId], onDelete: Cascade)
+  materials              Materi[]
+  certificates          Sertifikat[]
+  workshops             Workshop[]
+
+  @@index([mitraId])
+  @@index([status])
+  @@index([skkniCode])
+  @@index([aqrfLevel])
+  @@map("kursus")
+}
+
+enum KursusStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  SUSPENDED
+}
+
+model Materi {
+  materiId          String   @id @default(uuid()) @map("materi_id")
+  kursusId          String   @map("kursus_id")
+  title             String   @db.VarChar(255)
+  description       String?  @db.Text
+  materialType      MateriType @map("material_type") @db.VarChar(50)
+  fileUrl           String?  @map("file_url") @db.VarChar(500)
+  fileSize          Int?     @map("file_size")
+  fileType          String?  @map("file_type") @db.VarChar(100)
+  thumbnailUrl      String?  @map("thumbnail_url") @db.VarChar(500)
+  moduleNumber      Int?     @map("module_number")
+  lessonNumber      Int?     @map("lesson_number")
+  orderIndex        Int      @default(0) @map("order_index")
+  durationSeconds   Int?     @map("duration_seconds")
+  isPreview         Boolean  @default(false) @map("is_preview")
+  requiresCompletion Boolean @default(true) @map("requires_completion")
+  status            MateriStatus @default(ACTIVE) @db.VarChar(50)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  kursus            Kursus  @relation(fields: [kursusId], references: [kursusId], onDelete: Cascade)
+
+  @@index([kursusId])
+  @@index([kursusId, orderIndex])
+  @@map("materi")
+}
+
+enum MateriType {
+  VIDEO
+  PDF
+  DOCUMENT
+  IMAGE
+  AUDIO
+  LINK
+  QUIZ
+}
+
+enum MateriStatus {
+  ACTIVE
+  ARCHIVED
+  DRAFT
+}
+
+// ============================================================================
+// Workshops
+// ============================================================================
+
+model Workshop {
+  workshopId                String   @id @default(uuid()) @map("workshop_id")
+  mitraId                   String   @map("mitra_id")
+  kursusId                  String?  @map("kursus_id")
+  title                     String   @db.VarChar(255)
+  description               String?  @db.Text
+  tefaLocationId            String?  @map("tefa_location_id") @db.Uuid
+  tefaLocationName          String?  @map("tefa_location_name") @db.VarChar(255)
+  tefaAddress               String?  @map("tefa_address") @db.Text
+  tefaCity                  String?  @map("tefa_city") @db.VarChar(100)
+  tefaProvince              String?  @map("tefa_province") @db.VarChar(100)
+  latitude                  Decimal? @db.Decimal(10, 8)
+  longitude                 Decimal? @db.Decimal(11, 8)
+  geofenceRadius            Decimal? @map("geofence_radius") @db.Decimal(10, 2)
+  geofenceId                String?  @map("geofence_id") @db.Uuid
+  startDate                 DateTime @map("start_date")
+  endDate                   DateTime @map("end_date")
+  startTime                 DateTime? @map("start_time")
+  endTime                   DateTime? @map("end_time")
+  durationHours             Int?     @map("duration_hours")
+  capacity                  Int
+  enrolledCount             Int      @default(0) @map("enrolled_count")
+  price                     Decimal  @default(0) @db.Decimal(15, 2)
+  currency                  String   @default("IDR") @db.VarChar(3)
+  instructorId              String?  @map("instructor_id") @db.Uuid
+  instructorName            String?  @map("instructor_name") @db.VarChar(255)
+  requiresGpsAttendance     Boolean  @default(true) @map("requires_gps_attendance")
+  attendanceVerificationMethod AttendanceMethod @default(GPS) @map("attendance_verification_method") @db.VarChar(50)
+  status                    WorkshopStatus @default(DRAFT) @db.VarChar(50)
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
+
+  mitra                     MitraProfile @relation(fields: [mitraId], references: [profileId], onDelete: Cascade)
+  kursus                    Kursus? @relation(fields: [kursusId], references: [kursusId], onDelete: SetNull)
+  registrations             WorkshopRegistration[]
+  certificates              Sertifikat[]
+
+  @@index([mitraId])
+  @@index([kursusId])
+  @@index([startDate])
+  @@index([status])
+  @@map("workshop")
+}
+
+enum AttendanceMethod {
+  GPS
+  QR_CODE
+  NFC
+  BIOMETRIC
+  MANUAL
+}
+
+enum WorkshopStatus {
+  DRAFT
+  OPEN
+  FULL
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model WorkshopRegistration {
+  registrationId    String   @id @default(uuid()) @map("registration_id")
+  workshopId        String   @map("workshop_id")
+  talentaId         String   @map("talenta_id")
+  registeredAt      DateTime @default(now()) @map("registered_at")
+  status            RegistrationStatus @default(PENDING) @db.VarChar(50)
+  paymentStatus     PaymentStatus @default(PENDING) @map("payment_status") @db.VarChar(50)
+  paymentId         String?  @map("payment_id") @db.VarChar(100)
+
+  workshop          Workshop @relation(fields: [workshopId], references: [workshopId], onDelete: Cascade)
+  talenta           TalentaProfile @relation(fields: [talentaId], references: [profileId], onDelete: Cascade)
+  attendance        WorkshopAttendance[]
+
+  @@unique([workshopId, talentaId])
+  @@index([workshopId])
+  @@index([talentaId])
+  @@map("workshop_registrations")
+}
+
+enum RegistrationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+}
+
+model WorkshopAttendance {
+  attendanceId      String   @id @default(uuid()) @map("attendance_id")
+  registrationId   String   @map("registration_id")
+  sessionId         String?  @map("session_id") @db.Uuid
+  attendanceType    AttendanceType @map("attendance_type") @db.VarChar(50)
+  latitude          Decimal? @db.Decimal(10, 8)
+  longitude         Decimal? @db.Decimal(11, 8)
+  accuracy          Decimal? @db.Decimal(10, 2)
+  withinGeofence    Boolean? @map("within_geofence")
+  attendanceTimestamp DateTime @map("attendance_timestamp")
+  deviceTimestamp   DateTime? @map("device_timestamp")
+  serverTimestamp   DateTime @default(now()) @map("server_timestamp")
+  verificationMethod String?  @map("verification_method") @db.VarChar(50)
+  verified          Boolean  @default(false)
+  deviceId          String?  @map("device_id") @db.VarChar(255)
+  ipAddress         String?  @map("ip_address") @db.Inet
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  registration      WorkshopRegistration @relation(fields: [registrationId], references: [registrationId], onDelete: Cascade)
+
+  @@index([registrationId])
+  @@index([attendanceTimestamp])
+  @@map("workshop_attendance")
+}
+
+enum AttendanceType {
+  CHECK_IN
+  CHECK_OUT
+  BREAK_START
+  BREAK_END
+}
+
+// ============================================================================
+// Certificates
+// ============================================================================
+
+model Sertifikat {
+  sertifikatId            String   @id @default(uuid()) @map("sertifikat_id")
+  mitraId                 String   @map("mitra_id")
+  talentaId               String   @map("talenta_id")
+  kursusId                String?  @map("kursus_id")
+  workshopId              String?  @map("workshop_id")
+  certificateNumber       String   @unique @map("certificate_number") @db.VarChar(100)
+  credentialId            String?  @unique @map("credential_id") @db.VarChar(500)
+  credentialJson          Json     @map("credential_json")
+  title                    String   @db.VarChar(255)
+  description              String?  @db.Text
+  issuedDate               DateTime @default(now()) @map("issued_date")
+  expirationDate           DateTime? @map("expiration_date")
+  skkniCode                String?  @map("skkni_code") @db.VarChar(100)
+  skkniName                String?  @map("skkni_name") @db.VarChar(255)
+  aqrfLevel                 Int?     @map("aqrf_level")
+  score                     Decimal?  @db.Decimal(5, 2)
+  grade                     String?   @db.VarChar(10)
+  level                     String?   @db.VarChar(50)
+  status                    SertifikatStatus @default(ACTIVE) @db.VarChar(50)
+  revokedAt                 DateTime? @map("revoked_at")
+  revocationReason          String?   @map("revocation_reason") @db.Text
+  proofType                 String?   @map("proof_type") @db.VarChar(100)
+  proofVerificationMethod    String?   @map("proof_verification_method") @db.VarChar(500)
+  proofJws                   String?   @map("proof_jws") @db.Text
+  proofCreated               DateTime? @map("proof_created")
+  merkleRootHash             String?   @map("merkle_root_hash") @db.VarChar(64)
+  blockchainTxHash          String?   @map("blockchain_tx_hash") @db.VarChar(66)
+  blockchainNetwork          String?   @map("blockchain_network") @db.VarChar(50)
+  anchoredAt                 DateTime? @map("anchored_at")
+  visibleToIndustry          Boolean  @default(true) @map("visible_to_industry")
+  searchable                 Boolean  @default(true)
+  trainingCostId             String?   @map("training_cost_id") @db.Uuid
+  taxDeductionEligible       Boolean  @default(false) @map("tax_deduction_eligible")
+  createdAt                  DateTime @default(now()) @map("created_at")
+  updatedAt                  DateTime @updatedAt @map("updated_at")
+
+  mitra                      MitraProfile @relation(fields: [mitraId], references: [profileId], onDelete: Restrict)
+  talenta                    TalentaProfile @relation(fields: [talentaId], references: [profileId], onDelete: Cascade)
+  kursus                     Kursus? @relation(fields: [kursusId], references: [kursusId], onDelete: SetNull)
+  workshop                   Workshop? @relation(fields: [workshopId], references: [workshopId], onDelete: SetNull)
+
+  @@index([mitraId])
+  @@index([talentaId])
+  @@index([kursusId])
+  @@index([status])
+  @@index([skkniCode])
+  @@index([visibleToIndustry, searchable])
+  @@map("sertifikat")
+}
+
+enum SertifikatStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+  SUSPENDED
+}
+
+// ============================================================================
+// Job Postings and Applications
+// ============================================================================
+
+model Lowongan {
+  lowonganId           String   @id @default(uuid()) @map("lowongan_id")
+  industriId           String   @map("industri_id")
+  title                String   @db.VarChar(255)
+  description          String   @db.Text
+  jobType              JobType? @map("job_type") @db.VarChar(50)
+  location             String?  @db.VarChar(255)
+  city                 String?  @db.VarChar(100)
+  province             String?  @db.VarChar(100)
+  remoteAllowed        Boolean  @default(false) @map("remote_allowed")
+  salaryMin            Decimal? @map("salary_min") @db.Decimal(15, 2)
+  salaryMax            Decimal? @map("salary_max") @db.Decimal(15, 2)
+  salaryCurrency       String   @default("IDR") @map("salary_currency") @db.VarChar(3)
+  salaryPeriod         SalaryPeriod? @map("salary_period") @db.VarChar(20)
+  requirements         Json
+  positionsAvailable   Int      @default(1) @map("positions_available")
+  positionsFilled      Int      @default(0) @map("positions_filled")
+  applicationDeadline  DateTime? @map("application_deadline")
+  applicationCount     Int      @default(0) @map("application_count")
+  status               LowonganStatus @default(DRAFT) @db.VarChar(50)
+  visibleToTalenta     Boolean  @default(false) @map("visible_to_talenta")
+  publishedAt          DateTime? @map("published_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  industri             IndustriProfile @relation(fields: [industriId], references: [profileId], onDelete: Cascade)
+  applications         Pelamar[]
+  talentPoolSources    TalentPool[]
+
+  @@index([industriId])
+  @@index([status])
+  @@index([visibleToTalenta, status])
+  @@map("lowongan")
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}
+
+enum SalaryPeriod {
+  MONTHLY
+  YEARLY
+  HOURLY
+}
+
+enum LowonganStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+  FILLED
+  CANCELLED
+}
+
+model Pelamar {
+  pelamarId            String   @id @default(uuid()) @map("pelamar_id")
+  lowonganId           String   @map("lowongan_id")
+  talentaId            String   @map("talenta_id")
+  appliedAt            DateTime @default(now()) @map("applied_at")
+  status               ApplicationStatus @default(PENDING) @db.VarChar(50)
+  coverLetter          String?  @map("cover_letter") @db.Text
+  resumeUrl            String?  @map("resume_url") @db.VarChar(500)
+  attachedCertificates Json?    @map("attached_certificates")
+  reviewedAt           DateTime? @map("reviewed_at")
+  reviewedBy           String?  @map("reviewed_by") @db.Uuid
+  reviewNotes          String?  @map("review_notes") @db.Text
+  interviewScheduled   Boolean  @default(false) @map("interview_scheduled")
+  interviewDate        DateTime? @map("interview_date")
+  interviewLocation    String?  @map("interview_location") @db.VarChar(255)
+  interviewType        InterviewType? @map("interview_type") @db.VarChar(50)
+  hiringDecision       HiringDecision? @map("hiring_decision") @db.VarChar(50)
+  hiringDecisionAt     DateTime? @map("hiring_decision_at")
+  hiringDecisionBy     String?  @map("hiring_decision_by") @db.Uuid
+  hiringDecisionNotes  String?  @map("hiring_decision_notes") @db.Text
+  savedToTalentPool    Boolean  @default(false) @map("saved_to_talent_pool")
+  talentPoolReason     String?  @map("talent_pool_reason") @db.Text
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  lowongan             Lowongan @relation(fields: [lowonganId], references: [lowonganId], onDelete: Cascade)
+  talenta              TalentaProfile @relation(fields: [talentaId], references: [profileId], onDelete: Cascade)
+  talentPoolSource     TalentPool?
+
+  @@unique([lowonganId, talentaId])
+  @@index([lowonganId])
+  @@index([talentaId])
+  @@index([status])
+  @@index([appliedAt])
+  @@index([hiringDecision])
+  @@map("pelamar")
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  SHORTLISTED
+  INTERVIEW_SCHEDULED
+  HIRED
+  REJECTED
+}
+
+enum InterviewType {
+  ONLINE
+  ONSITE
+  PHONE
+  VIDEO
+}
+
+enum HiringDecision {
+  ACCEPT
+  REJECT
+  PENDING
+}
+
+model TalentPool {
+  talentPoolId         String   @id @default(uuid()) @map("talent_pool_id")
+  industriId           String   @map("industri_id")
+  talentaId            String   @map("talenta_id")
+  sourceType           SourceType? @map("source_type") @db.VarChar(50)
+  sourceApplicationId  String?  @map("source_application_id") @db.Uuid
+  sourceJobId          String?  @map("source_job_id") @db.Uuid
+  reason               String?  @db.Text
+  notes                String?  @db.Text
+  tags                 Json?    @type("String[]")
+  status               TalentPoolStatus @default(ACTIVE) @db.VarChar(50)
+  lastContactedAt      DateTime? @map("last_contacted_at")
+  contactCount         Int      @default(0) @map("contact_count")
+  addedAt              DateTime @default(now()) @map("added_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  industri             IndustriProfile @relation(fields: [industriId], references: [profileId], onDelete: Cascade)
+  talenta              TalentaProfile @relation(fields: [talentaId], references: [profileId], onDelete: Cascade)
+  sourceApplication    Pelamar? @relation(fields: [sourceApplicationId], references: [pelamarId], onDelete: SetNull)
+  sourceJob            Lowongan? @relation(fields: [sourceJobId], references: [lowonganId], onDelete: SetNull)
+
+  @@unique([industriId, talentaId])
+  @@index([industriId])
+  @@index([talentaId])
+  @@index([status])
+  @@map("talent_pool")
+}
+
+enum SourceType {
+  REJECTED_APPLICATION
+  SEARCH
+  MANUAL
+}
+
+enum TalentPoolStatus {
+  ACTIVE
+  CONTACTED
+  HIRED
+  REMOVED
+}
+
+
