@@ -9,6 +9,10 @@ import { supabaseAdmin } from '@/lib/db';
 import { generateToken, generateRefreshToken } from '@/lib/auth';
 import { validateEmail } from '@/lib/validators';
 
+// Runtime configuration for Vercel
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

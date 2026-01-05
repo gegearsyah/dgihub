@@ -17,9 +17,16 @@ export function middleware(request: NextRequest) {
       'http://localhost:3000',
       'http://localhost:3001'
     ];
+    
+    // Allow Vercel deployments
+    const isVercel = origin?.includes('vercel.app') || origin?.includes('vercel.sh');
+    const isAllowed = origin && (allowedOrigins.includes(origin) || isVercel);
 
-    if (origin && allowedOrigins.includes(origin)) {
+    if (isAllowed) {
       response.headers.set('Access-Control-Allow-Origin', origin);
+    } else if (isVercel) {
+      // For Vercel, allow the origin
+      response.headers.set('Access-Control-Allow-Origin', origin || '*');
     }
 
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
