@@ -288,12 +288,14 @@ export default function JobsPage() {
 
         <div className="space-y-4">
           {jobs.length === 0 ? (
-            <div className={`rounded-lg shadow p-8 text-center ${
-              isDark ? 'bg-[#1B263B] border border-[#415A77]' : 'bg-white'
-            }`}>
-              <p className={isDark ? 'text-[#C5C6C0]' : 'text-gray-500'}>
-                No job postings yet. Create your first job posting!
-              </p>
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className={`rounded-lg shadow p-8 text-center max-w-md mx-auto ${
+                isDark ? 'bg-[#1B263B] border border-[#415A77]' : 'bg-white'
+              }`}>
+                <p className={isDark ? 'text-[#C5C6C0]' : 'text-gray-500'}>
+                  No job postings yet. Create your first job posting!
+                </p>
+              </div>
             </div>
           ) : (
             jobs.map((job) => (

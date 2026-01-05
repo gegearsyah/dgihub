@@ -170,20 +170,22 @@ export default function MyCoursesPage() {
         </div>
 
         {enrollments.length === 0 && !loading && (
-          <div className={`text-center py-12 rounded-lg ${
-            isDark ? 'bg-[#1B263B]' : 'bg-white'
-          }`}>
-            <p className={`mb-4 ${
-              isDark ? 'text-[#C5C6C0]' : 'text-gray-500'
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className={`text-center py-12 px-8 rounded-lg max-w-md mx-auto ${
+              isDark ? 'bg-[#1B263B]' : 'bg-white'
             }`}>
-              You haven't enrolled in any courses yet.
-            </p>
-            <Link
-              href="/talenta/courses"
-              className="inline-block px-6 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
-            >
-              Browse Courses
-            </Link>
+              <p className={`mb-4 ${
+                isDark ? 'text-[#C5C6C0]' : 'text-gray-500'
+              }`}>
+                You haven't enrolled in any courses yet.
+              </p>
+              <Link
+                href="/talenta/courses"
+                className="inline-block px-6 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
+              >
+                Browse Courses
+              </Link>
+            </div>
           </div>
         )}
       </div>

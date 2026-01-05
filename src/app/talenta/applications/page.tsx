@@ -67,20 +67,22 @@ export default function ApplicationsPage() {
         </div>
 
         {applications.length === 0 ? (
-          <div className={`rounded-lg shadow p-8 text-center ${
-            isDark ? 'bg-[#1B263B]' : 'bg-white'
-          }`}>
-            <p className={`mb-4 ${
-              isDark ? 'text-[#C5C6C0]' : 'text-gray-500'
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className={`rounded-lg shadow p-8 text-center max-w-md mx-auto ${
+              isDark ? 'bg-[#1B263B]' : 'bg-white'
             }`}>
-              You haven't applied to any jobs yet.
-            </p>
-            <Link
-              href="/talenta/jobs"
-              className="inline-block px-6 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
-            >
-              Browse Available Jobs
-            </Link>
+              <p className={`mb-4 ${
+                isDark ? 'text-[#C5C6C0]' : 'text-gray-500'
+              }`}>
+                You haven't applied to any jobs yet.
+              </p>
+              <Link
+                href="/talenta/jobs"
+                className="inline-block px-6 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
+              >
+                Browse Available Jobs
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="space-y-4">

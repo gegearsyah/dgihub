@@ -247,12 +247,14 @@ export default function CoursesPage() {
         </div>
 
         {courses.length === 0 && !loading && (
-          <div className={`text-center py-12 rounded-lg ${
-            isDark ? 'bg-[#1B263B]' : 'bg-white'
-          }`}>
-            <p className={isDark ? 'text-[#C5C6C0]' : 'text-gray-500'}>
-              No courses found. Try adjusting your filters.
-            </p>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className={`text-center py-12 px-8 rounded-lg max-w-md mx-auto ${
+              isDark ? 'bg-[#1B263B]' : 'bg-white'
+            }`}>
+              <p className={isDark ? 'text-[#C5C6C0]' : 'text-gray-500'}>
+                No courses found. Try adjusting your filters.
+              </p>
+            </div>
           </div>
         )}
       </div>

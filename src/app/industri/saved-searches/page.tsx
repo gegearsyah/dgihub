@@ -67,17 +67,19 @@ export default function SavedSearchesPage() {
         </div>
 
         {savedSearches.length === 0 ? (
-          <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-12 text-center">
-            <p className="text-gray-400 mb-4">No saved searches yet</p>
-            <p className="text-sm text-gray-500 mb-6">
-              Save your search criteria from the talent search page to access them quickly later
-            </p>
-            <Link
-              href="/industri/search"
-              className="inline-block px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
-            >
-              Start Searching
-            </Link>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-12 text-center max-w-md mx-auto">
+              <p className="text-gray-400 mb-4">No saved searches yet</p>
+              <p className="text-sm text-gray-500 mb-6">
+                Save your search criteria from the talent search page to access them quickly later
+              </p>
+              <Link
+                href="/industri/search"
+                className="inline-block px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+              >
+                Start Searching
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -104,8 +104,10 @@ export default function ApplicantsPage() {
         </div>
 
         {applicants.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
-            No applicants yet for this job posting.
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="bg-white rounded-lg shadow p-8 text-center max-w-md mx-auto text-gray-500">
+              No applicants yet for this job posting.
+            </div>
           </div>
         ) : (
           <div className="space-y-4">

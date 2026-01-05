@@ -1,243 +1,266 @@
-# Database Seeding Guide
+# Seed Data Guide for Supabase
 
-## Overview
+This guide explains how to populate your Supabase database with comprehensive interconnected data for testing all features.
 
-This guide explains how to seed the database with comprehensive dummy data for all roles.
+## 📋 Overview
 
-## Quick Start
+The seed data includes:
+- **11 Users**: 5 Talenta, 3 Mitra, 3 Industri
+- **11 Profiles**: Complete profiles for all users
+- **9 Courses**: Published courses from different Mitra
+- **12 Enrollments**: Talenta enrolled in various courses
+- **4 Certificates**: Issued to Talenta for completed courses
+- **6 Job Postings**: Published jobs from Industri companies
+- **11 Job Applications**: Talenta applying to various jobs
 
-### Option 1: Basic Seed (Minimal Data)
+## 🔑 Demo Accounts
+
+All demo accounts use the password: **`password123`**
+
+### Talenta Accounts
+- `talenta1@demo.com` - Budi Santoso (Active, has certificates)
+- `talenta2@demo.com` - Siti Nurhaliza (Active, has certificates)
+- `talenta3@demo.com` - Ahmad Fauzi (Active)
+- `talenta4@demo.com` - Dewi Sartika (Verified, incomplete profile)
+- `talenta5@demo.com` - Rizki Pratama (Active)
+
+### Mitra Accounts
+- `mitra1@demo.com` - LPK Teknologi Indonesia
+- `mitra2@demo.com` - LPK Cloud Solutions
+- `mitra3@demo.com` - LPK Digital Skills Academy
+
+### Industri Accounts
+- `industri1@demo.com` - PT Teknologi Maju
+- `industri2@demo.com` - PT Digital Innovation
+- `industri3@demo.com` - PT Smart Solutions
+
+## 🚀 Method 1: Using Node.js Script (Recommended)
+
+This is the easiest method and handles all relationships automatically.
+
+### Prerequisites
+1. Make sure you have `.env.local` file with:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   ```
+
+2. Install dependencies (if not already installed):
+   ```bash
+   npm install
+   ```
+
+### Run the Script
 ```bash
-npm run db:seed
+node scripts/seed-supabase.js
 ```
 
-This creates:
-- 3 users (1 Talenta, 1 Mitra, 1 Industri)
-- 1 course
-- 1 certificate
-- 1 job posting
+The script will:
+- Create all users with proper password hashes
+- Create profiles for each user type
+- Create courses and link them to Mitra
+- Create enrollments linking Talenta to courses
+- Create certificates for completed courses
+- Create job postings from Industri
+- Create job applications from Talenta to jobs
 
-### Option 2: Comprehensive Seed (Full Dummy Data) ⭐ RECOMMENDED
-```bash
-npm run db:seed:full
-```
+## 🚀 Method 2: Using SQL Script
 
-This creates:
-- **11 users** (5 Talenta, 3 Mitra, 3 Industri)
-- **6 courses** with materials
-- **8 enrollments**
-- **4 certificates**
-- **2 workshops** with registrations
-- **4 job postings**
-- **4 job applications**
+You can also run the SQL script directly in Supabase SQL Editor.
 
-## What Gets Created
+### Steps
 
-### Users & Profiles
+1. **Open Supabase Dashboard**
+   - Go to your Supabase project
+   - Navigate to **SQL Editor**
 
-#### Talenta Users (5 users)
-1. `talenta1@demo.com` - John Doe (Jakarta, AQRF 6)
-2. `talenta2@demo.com` - Jane Smith (Bandung, AQRF 5)
-3. `talenta3@demo.com` - Bob Johnson (Surabaya, AQRF 6)
-4. `talenta4@demo.com` - Alice Williams (Yogyakarta, AQRF 4)
-5. `talenta5@demo.com` - Charlie Brown (Medan, AQRF 7)
+2. **Run the Seed Script**
+   - Open `supabase/seed_data.sql`
+   - Copy the entire contents
+   - Paste into SQL Editor
+   - Click **Run**
 
-**Password for all:** `password123`
+3. **Verify the Data**
+   - The script includes verification queries at the end (commented out)
+   - Uncomment and run them to check the data
 
-#### Mitra Users (3 users)
-1. `mitra1@demo.com` - LPK Teknologi Indonesia
-2. `mitra2@demo.com` - LPK Cloud Solutions
-3. `mitra3@demo.com` - LPK Digital Skills Academy
+### Important Notes for SQL Method
 
-**Password for all:** `password123`
+- The script uses `crypt()` function from `pgcrypto` extension
+- Make sure `pgcrypto` extension is enabled in your Supabase project
+- The password hash is pre-generated for `password123`
+- All foreign key relationships are properly maintained
 
-#### Industri Users (3 users)
-1. `industri1@demo.com` - PT Teknologi Maju
-2. `industri2@demo.com` - PT Digital Innovation
-3. `industri3@demo.com` - PT Smart Solutions
+## 📊 Data Relationships
 
-**Password for all:** `password123`
+### Course Enrollments
+- **Talenta 1**: Completed "Full Stack Web Development", Enrolled in "Cloud Computing" and "DevOps"
+- **Talenta 2**: Completed "Data Science" and "Full Stack Web Development", Enrolled in "UI/UX Design"
+- **Talenta 3**: Enrolled in "Mobile App Development" and "Cybersecurity"
+- **Talenta 4**: Enrolled in "Digital Marketing" and "Project Management"
+- **Talenta 5**: Completed "Full Stack Web Development", Enrolled in "DevOps"
 
-### Courses
-
-1. **Advanced Software Development** (LPK Teknologi Indonesia)
-   - SKKNI: IT-2023-001
-   - AQRF: Level 6
-   - Price: Rp 2,500,000
-   - Duration: 120 hours / 15 days
-
-2. **Cloud Architecture Fundamentals** (LPK Teknologi Indonesia)
-   - SKKNI: IT-2023-002
-   - AQRF: Level 5
-   - Price: Rp 1,800,000
-   - Duration: 80 hours / 10 days
-
-3. **Data Science & Machine Learning** (LPK Cloud Solutions)
-   - SKKNI: IT-2023-003
-   - AQRF: Level 6
-   - Price: Rp 3,000,000
-   - Duration: 100 hours / 12 days
-
-4. **Full Stack Web Development** (LPK Cloud Solutions)
-   - SKKNI: IT-2023-004
-   - AQRF: Level 5
-   - Price: Rp 3,500,000
-   - Duration: 150 hours / 18 days
-
-5. **UI/UX Design Mastery** (LPK Digital Skills Academy)
-   - SKKNI: DESIGN-2023-001
-   - AQRF: Level 4
-   - Price: Rp 2,200,000
-   - Duration: 90 hours / 11 days
-
-6. **DevOps Engineering** (LPK Digital Skills Academy)
-   - SKKNI: DEVOPS-2023-001
-   - AQRF: Level 7
-   - Price: Rp 2,800,000
-   - Duration: 110 hours / 14 days
-
-### Enrollments
-
-- John Doe enrolled in 2 courses (75% and 45% progress)
-- Jane Smith enrolled in 2 courses (90% and 30% progress)
-- Bob Johnson completed 1 course (100%) and enrolled in 1 more
-- Alice Williams enrolled in UI/UX course (85% progress)
-- Charlie Brown enrolled in DevOps course (50% progress)
-
-### Certificates
-
-- John Doe: Advanced Software Development (Score: 85, Grade: A)
-- Bob Johnson: Advanced Software Development (Score: 92, Grade: A)
-- Jane Smith: Data Science & Machine Learning (Score: 88, Grade: A)
-- Alice Williams: UI/UX Design Mastery (Score: 90, Grade: A)
-
-### Workshops
-
-1. **Hands-on React Workshop** (Jakarta)
-   - Date: 2024-02-15
-   - Capacity: 30
-   - Price: Rp 500,000
-   - GPS attendance enabled
-
-2. **Data Science Bootcamp** (Bandung)
-   - Date: 2024-02-20 to 2024-02-22
-   - Capacity: 25
-   - Price: Rp 750,000
-   - GPS attendance enabled
-
-### Job Postings
-
-1. **Senior Software Engineer** (PT Teknologi Maju)
-   - Location: Jakarta
-   - Salary: Rp 15M - 25M
-   - Requires: SKKNI-IT-2023-001, AQRF 6+
-
-2. **Cloud Solutions Architect** (PT Teknologi Maju)
-   - Location: Jakarta
-   - Salary: Rp 20M - 35M
-   - Requires: SKKNI-IT-2023-002, AQRF 7+
-
-3. **Data Scientist** (PT Digital Innovation)
-   - Location: Bandung
-   - Salary: Rp 18M - 30M
-   - Requires: SKKNI-IT-2023-003, AQRF 6+
-
-4. **UI/UX Designer** (PT Smart Solutions)
-   - Location: Yogyakarta
-   - Salary: Rp 12M - 20M
-   - Requires: SKKNI-DESIGN-2023-001, AQRF 4+
+### Certificates Issued
+- Certificates are automatically created for all completed enrollments
+- Certificate numbers follow format: `CERT-YYYY-XXXXXX`
+- AQRF levels are assigned based on course type
 
 ### Job Applications
+- **Senior Full Stack Developer**: 3 applications (1 accepted, 2 pending)
+- **DevOps Engineer**: 2 applications (1 rejected, 1 pending)
+- **Frontend Developer**: 2 applications (1 accepted, 1 pending)
+- **Data Scientist**: 1 application (pending)
+- **Backend Developer**: 2 applications (both pending)
+- **UI/UX Designer**: 1 application (pending)
 
-- John Doe applied for Senior Software Engineer
-- Bob Johnson applied for Senior Software Engineer
-- Jane Smith applied for Data Scientist
-- Alice Williams applied for UI/UX Designer
+## 🔍 Verification Queries
 
-## Usage
+After seeding, you can run these queries to verify the data:
 
-### 1. Reset Database (Optional)
-If you want to start fresh:
-```bash
-npm run db:reset
+### Count All Records
+```sql
+SELECT 
+    'Users' as table_name, COUNT(*) as count FROM public.users
+UNION ALL
+SELECT 'Talenta Profiles', COUNT(*) FROM public.talenta_profiles
+UNION ALL
+SELECT 'Mitra Profiles', COUNT(*) FROM public.mitra_profiles
+UNION ALL
+SELECT 'Industri Profiles', COUNT(*) FROM public.industri_profiles
+UNION ALL
+SELECT 'Courses', COUNT(*) FROM public.courses
+UNION ALL
+SELECT 'Enrollments', COUNT(*) FROM public.enrollments
+UNION ALL
+SELECT 'Certificates', COUNT(*) FROM public.certificates
+UNION ALL
+SELECT 'Job Postings', COUNT(*) FROM public.job_postings
+UNION ALL
+SELECT 'Job Applications', COUNT(*) FROM public.job_applications;
 ```
 
-### 2. Run Migrations
-```bash
-npm run db:migrate
+### View Courses with Enrollment Counts
+```sql
+SELECT 
+    c.id,
+    c.title,
+    mp.organization_name as provider,
+    COUNT(e.id) as enrollment_count,
+    COUNT(CASE WHEN e.status = 'COMPLETED' THEN 1 END) as completed_count
+FROM public.courses c
+JOIN public.mitra_profiles mp ON c.mitra_id = mp.profile_id
+LEFT JOIN public.enrollments e ON c.id = e.course_id
+GROUP BY c.id, c.title, mp.organization_name
+ORDER BY enrollment_count DESC;
 ```
 
-### 3. Seed Data
-```bash
-# For comprehensive data
-npm run db:seed:full
-
-# For basic data
-npm run db:seed
+### View Job Postings with Application Counts
+```sql
+SELECT 
+    jp.id,
+    jp.title,
+    ip.company_name,
+    COUNT(ja.id) as application_count,
+    COUNT(CASE WHEN ja.status = 'ACCEPTED' THEN 1 END) as accepted_count,
+    COUNT(CASE WHEN ja.status = 'PENDING' THEN 1 END) as pending_count
+FROM public.job_postings jp
+JOIN public.industri_profiles ip ON jp.industri_id = ip.profile_id
+LEFT JOIN public.job_applications ja ON jp.id = ja.job_id
+GROUP BY jp.id, jp.title, ip.company_name
+ORDER BY application_count DESC;
 ```
 
-## Testing Scenarios
-
-### As Talenta User
-1. Login as `talenta1@demo.com`
-2. Browse courses - see 6 available courses
-3. View "My Courses" - see 2 enrolled courses
-4. View certificates - see 1 certificate
-5. Browse workshops - see 2 workshops
-6. Apply for jobs - see 4 job postings
-
-### As Mitra User
-1. Login as `mitra1@demo.com`
-2. View courses - see 2 created courses
-3. View participants - see enrolled students
-4. Issue certificates - can issue to completed students
-5. Manage workshops - see created workshops
-
-### As Industri User
-1. Login as `industri1@demo.com`
-2. Search talent - find candidates with certificates
-3. View job postings - see 2 created jobs
-4. View applicants - see applications received
-
-## Data Relationships
-
-```
-Users (11)
-├── Talenta Profiles (5)
-│   ├── Enrollments (8)
-│   ├── Certificates (4)
-│   ├── Workshop Registrations (3)
-│   └── Job Applications (4)
-├── Mitra Profiles (3)
-│   ├── Courses (6)
-│   │   └── Materials (10)
-│   └── Workshops (2)
-└── Industri Profiles (3)
-    └── Job Postings (4)
+### View Talenta with Their Certificates
+```sql
+SELECT 
+    u.full_name,
+    u.email,
+    COUNT(c.id) as certificate_count,
+    STRING_AGG(c.certificate_number, ', ') as certificates
+FROM public.users u
+JOIN public.talenta_profiles tp ON u.user_id = tp.user_id
+LEFT JOIN public.certificates c ON tp.profile_id = c.talenta_id
+WHERE u.user_type = 'TALENTA'
+GROUP BY u.user_id, u.full_name, u.email
+ORDER BY certificate_count DESC;
 ```
 
-## Notes
+## 🧹 Clearing Seed Data
 
-- All passwords are: `password123`
-- All users are verified and active
-- All courses are published
-- All job postings are published
-- Certificates are in Open Badges 3.0 format
-- Workshop attendance uses GPS verification
-- Skills are stored as JSONB with name, level, and verified status
+If you need to clear the seed data and start fresh:
 
-## Troubleshooting
+### Using SQL
+```sql
+-- WARNING: This will delete ALL data in these tables
+TRUNCATE TABLE public.job_applications CASCADE;
+TRUNCATE TABLE public.certificates CASCADE;
+TRUNCATE TABLE public.enrollments CASCADE;
+TRUNCATE TABLE public.job_postings CASCADE;
+TRUNCATE TABLE public.courses CASCADE;
+TRUNCATE TABLE public.talenta_profiles CASCADE;
+TRUNCATE TABLE public.mitra_profiles CASCADE;
+TRUNCATE TABLE public.industri_profiles CASCADE;
+TRUNCATE TABLE public.users CASCADE;
+```
 
-If seeding fails:
-1. Make sure database is running
-2. Check `.env` file has correct database credentials
-3. Run migrations first: `npm run db:migrate`
-4. Try resetting: `npm run db:reset` then `npm run db:seed:full`
+### Using Node.js Script
+You can modify `scripts/seed-supabase.js` to add a `--clear` flag that truncates tables before seeding.
 
----
+## ⚠️ Troubleshooting
 
-**Last Updated**: 2024-01-15
+### Error: "relation does not exist"
+- Make sure you've run all migrations first
+- Check that `supabase/migrations/002_fix_users_schema.sql` has been applied
 
+### Error: "duplicate key value violates unique constraint"
+- The script uses `ON CONFLICT DO NOTHING` to handle duplicates
+- If you see this error, some data already exists
+- You can either clear the data first or the script will skip existing records
 
+### Error: "foreign key constraint fails"
+- Make sure all migrations are applied in order
+- Check that profile tables are created before courses/jobs reference them
 
+### Password Hash Issues
+- The SQL script uses a pre-generated bcrypt hash
+- The Node.js script generates the hash automatically
+- If authentication fails, verify the hash matches `password123`
 
+## 📝 Notes
+
+- All timestamps are set to realistic past dates (days ago)
+- Skills are stored as JSONB arrays with structure: `[{name, level, verified}]`
+- Certificate numbers are auto-generated with format: `CERT-YYYY-XXXXXX`
+- Job applications have realistic status distributions (mostly PENDING, some ACCEPTED/REJECTED)
+- All courses are set to `PUBLISHED` status
+- All job postings are set to `PUBLISHED` status
+
+## 🎯 Testing Features
+
+With this seed data, you can test:
+
+1. **Talenta Features**
+   - View enrolled courses
+   - View certificates
+   - Apply to jobs
+   - View application status
+   - Browse available courses
+
+2. **Mitra Features**
+   - View created courses
+   - See enrollment statistics
+   - Manage course participants
+   - Issue certificates
+
+3. **Industri Features**
+   - View job postings
+   - See applications
+   - Review candidate profiles
+   - Make hiring decisions
+   - Search for talent
+
+4. **Cross-Feature Testing**
+   - Certificate verification
+   - Job application matching
+   - Course completion tracking
+   - Profile completeness

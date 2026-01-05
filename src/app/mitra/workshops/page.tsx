@@ -230,8 +230,10 @@ export default function WorkshopsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {workshops.length === 0 ? (
-              <div className="col-span-full bg-white rounded-lg shadow p-8 text-center text-gray-500">
-                No workshops yet. Create your first workshop!
+              <div className="col-span-full flex items-center justify-center min-h-[400px]">
+                <div className="bg-white rounded-lg shadow p-8 text-center max-w-md mx-auto text-gray-500">
+                  No workshops yet. Create your first workshop!
+                </div>
               </div>
             ) : (
               workshops.map((workshop) => (

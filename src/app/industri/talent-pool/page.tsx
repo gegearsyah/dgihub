@@ -121,14 +121,16 @@ export default function TalentPoolPage() {
         {/* Talent List */}
         <div className="space-y-4">
           {talentPool.length === 0 ? (
-            <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-12 text-center">
-              <p className="text-gray-400 mb-4">No talent in your pool yet</p>
-              <Link
-                href="/industri/search"
-                className="inline-block px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
-              >
-                Search for Talent
-              </Link>
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-12 text-center max-w-md mx-auto">
+                <p className="text-gray-400 mb-4">No talent in your pool yet</p>
+                <Link
+                  href="/industri/search"
+                  className="inline-block px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+                >
+                  Search for Talent
+                </Link>
+              </div>
             </div>
           ) : (
             talentPool.map((talent: any) => (

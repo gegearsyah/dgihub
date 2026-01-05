@@ -20,8 +20,17 @@ export async function GET(request: NextRequest) {
     const authError = authorizeUserType(user, 'INDUSTRI');
     if (authError) return authError;
 
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { success: false, message: 'Database not configured' },
+        { status: 500 }
+      );
+    }
+
+    const db = supabaseAdmin;
+
     // Get industri profile
-    const { data: industriProfile } = await supabaseAdmin
+    const { data: industriProfile } = await db
       .from('industri_profiles')
       .select('profile_id')
       .eq('user_id', user.userId)
@@ -35,7 +44,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get job postings
-    const { data: jobs, error } = await supabaseAdmin
+    const { data: jobs, error } = await db
       .from('job_postings')
       .select('*')
       .eq('industri_id', industriProfile.profile_id)
@@ -85,8 +94,17 @@ export async function POST(request: NextRequest) {
       requirements
     } = body;
 
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { success: false, message: 'Database not configured' },
+        { status: 500 }
+      );
+    }
+
+    const db = supabaseAdmin;
+
     // Get industri profile
-    const { data: industriProfile } = await supabaseAdmin
+    const { data: industriProfile } = await db
       .from('industri_profiles')
       .select('profile_id')
       .eq('user_id', user.userId)
@@ -100,7 +118,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create job posting
-    const { data: job, error } = await supabaseAdmin
+    const { data: job, error } = await db
       .from('job_postings')
       .insert({
         industri_id: industriProfile.profile_id,

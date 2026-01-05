@@ -20,8 +20,17 @@ export async function GET(request: NextRequest) {
     const authError = authorizeUserType(user, 'MITRA');
     if (authError) return authError;
 
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { success: false, message: 'Database not configured' },
+        { status: 500 }
+      );
+    }
+
+    const db = supabaseAdmin;
+
     // Get mitra profile
-    const { data: mitraProfile } = await supabaseAdmin
+    const { data: mitraProfile } = await db
       .from('mitra_profiles')
       .select('profile_id')
       .eq('user_id', user.userId)
@@ -35,7 +44,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get courses
-    const { data: courses, error } = await supabaseAdmin
+    const { data: courses, error } = await db
       .from('courses')
       .select('*')
       .eq('mitra_id', mitraProfile.profile_id)
@@ -76,8 +85,17 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, description, category, durationHours, skkniCode } = body;
 
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { success: false, message: 'Database not configured' },
+        { status: 500 }
+      );
+    }
+
+    const db = supabaseAdmin;
+
     // Get mitra profile
-    const { data: mitraProfile } = await supabaseAdmin
+    const { data: mitraProfile } = await db
       .from('mitra_profiles')
       .select('profile_id')
       .eq('user_id', user.userId)
@@ -91,7 +109,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create course
-    const { data: course, error } = await supabaseAdmin
+    const { data: course, error } = await db
       .from('courses')
       .insert({
         mitra_id: mitraProfile.profile_id,

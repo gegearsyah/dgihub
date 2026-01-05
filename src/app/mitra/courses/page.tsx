@@ -185,8 +185,16 @@ export default function MitraCoursesPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.length === 0 ? (
-            <div className="col-span-full bg-white rounded-lg shadow p-8 text-center text-gray-500">
-              No courses yet. Create your first course!
+            <div className="col-span-full flex items-center justify-center min-h-[400px]">
+              <div className={`rounded-lg shadow p-8 text-center max-w-md mx-auto ${
+                isDark ? 'bg-[#1B263B]' : 'bg-white'
+              }`}>
+                <p className={`mb-4 ${
+                  isDark ? 'text-[#C5C6C0]' : 'text-gray-500'
+                }`}>
+                  No courses yet. Create your first course!
+                </p>
+              </div>
             </div>
           ) : (
             courses.map((course: any) => (

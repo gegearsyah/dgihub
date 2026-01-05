@@ -18,8 +18,17 @@ export async function GET(request: NextRequest) {
     const authError = authorizeUserType(user, 'TALENTA');
     if (authError) return authError;
 
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { success: false, message: 'Database not configured' },
+        { status: 500 }
+      );
+    }
+
+    const db = supabaseAdmin;
+
     // Get talenta profile
-    const { data: talentaProfile } = await supabaseAdmin
+    const { data: talentaProfile } = await db
       .from('talenta_profiles')
       .select('profile_id')
       .eq('user_id', user.userId)
@@ -33,7 +42,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get certificates
-    const { data: certificates, error } = await supabaseAdmin
+    const { data: certificates, error } = await db
       .from('certificates')
       .select(`
         *,

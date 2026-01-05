@@ -22,7 +22,12 @@ export async function verifyToken(token: string): Promise<UserPayload | null> {
     const decoded = jwt.verify(token, secret) as any;
 
     // Verify user still exists and is active
-    const { data: user, error } = await supabaseAdmin
+    if (!supabaseAdmin) {
+      return null;
+    }
+
+    const db = supabaseAdmin;
+    const { data: user, error } = await db
       .from('users')
       .select('user_id, email, full_name, user_type, status')
       .eq('user_id', decoded.userId)

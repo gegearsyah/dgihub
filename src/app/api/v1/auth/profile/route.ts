@@ -21,9 +21,18 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { fullName, phone } = body;
 
+    if (!supabaseAdmin) {
+      return NextResponse.json(
+        { success: false, message: 'Database not configured' },
+        { status: 500 }
+      );
+    }
+
+    const db = supabaseAdmin;
+
     // Update user
     if (fullName) {
-      await supabaseAdmin
+      await db
         .from('users')
         .update({ full_name: fullName })
         .eq('user_id', user.userId);
@@ -32,17 +41,17 @@ export async function PUT(request: NextRequest) {
     // Update profile based on user type
     if (phone) {
       if (user.userType === 'TALENTA') {
-        await supabaseAdmin
+        await db
           .from('talenta_profiles')
           .update({ phone })
           .eq('user_id', user.userId);
       } else if (user.userType === 'MITRA') {
-        await supabaseAdmin
+        await db
           .from('mitra_profiles')
           .update({ phone })
           .eq('user_id', user.userId);
       } else if (user.userType === 'INDUSTRI') {
-        await supabaseAdmin
+        await db
           .from('industri_profiles')
           .update({ phone })
           .eq('user_id', user.userId);
@@ -50,7 +59,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get updated user
-    const { data: updatedUser } = await supabaseAdmin
+    const { data: updatedUser } = await db
       .from('users')
       .select('user_id, email, full_name, user_type, status')
       .eq('user_id', user.userId)

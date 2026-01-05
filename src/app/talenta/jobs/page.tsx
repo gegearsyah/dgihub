@@ -122,19 +122,23 @@ export default function JobSearchPage() {
 
         {/* Jobs List */}
         {jobs.length === 0 ? (
-          <div className={`rounded-lg shadow p-8 text-center ${
-            isDark ? 'bg-[#1B263B] border border-[#415A77]' : 'bg-white'
-          }`}>
-            <p className={isDark ? 'text-[#C5C6C0]' : 'text-gray-600'}>
-              No jobs found. Try adjusting your search filters.
-            </p>
-            <div className="mt-4">
-              <Link
-                href="/talenta/courses"
-                className="inline-block px-6 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
-              >
-                Browse Courses
-              </Link>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className={`rounded-lg shadow p-8 text-center max-w-md mx-auto ${
+              isDark ? 'bg-[#1B263B] border border-[#415A77]' : 'bg-white'
+            }`}>
+              <p className={`mb-4 ${
+                isDark ? 'text-[#C5C6C0]' : 'text-gray-600'
+              }`}>
+                No jobs found. Try adjusting your search filters.
+              </p>
+              <div className="mt-4">
+                <Link
+                  href="/talenta/courses"
+                  className="inline-block px-6 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
+                >
+                  Browse Courses
+                </Link>
+              </div>
             </div>
           </div>
         ) : (

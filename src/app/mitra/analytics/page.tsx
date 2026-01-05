@@ -157,7 +157,9 @@ export default function MitraAnalyticsPage() {
               <h2 className="text-xl font-semibold mb-4">Top Performing Courses</h2>
               <div className="space-y-4">
                 {analytics.courses.length === 0 ? (
-                  <p className="text-gray-400 text-center py-8">No courses yet</p>
+                  <div className="flex items-center justify-center py-12">
+                    <p className="text-gray-400 text-center">No courses yet</p>
+                  </div>
                 ) : (
                   analytics.courses.map((course: any) => (
                     <div key={course.kursus_id} className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg">
