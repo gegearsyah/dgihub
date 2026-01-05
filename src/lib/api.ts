@@ -41,12 +41,57 @@ class ApiClient {
         headers,
       });
 
-      const data = await response.json();
+      // Check if response has content before parsing JSON
+      const contentType = response.headers.get('content-type');
+      const isJson = contentType && contentType.includes('application/json');
+      
+      // Get response text first to check if it's empty
+      const text = await response.text();
+      
+      // If response is empty or not JSON, handle accordingly
+      if (!text || !isJson) {
+        if (!response.ok) {
+          // Return appropriate error based on status code
+          let errorMessage = 'An error occurred';
+          if (response.status === 405) {
+            errorMessage = 'Method not allowed. Please check the API endpoint.';
+          } else if (response.status === 404) {
+            errorMessage = 'API endpoint not found';
+          } else if (response.status >= 500) {
+            errorMessage = 'Server error. Please try again later.';
+          } else {
+            errorMessage = `Request failed with status ${response.status}`;
+          }
+          
+          return {
+            success: false,
+            message: errorMessage,
+          };
+        }
+        
+        // If response is OK but not JSON, return success with empty data
+        return {
+          success: true,
+          data: text || undefined,
+        };
+      }
+
+      // Parse JSON only if we have valid JSON content
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error('Failed to parse JSON response:', parseError);
+        return {
+          success: false,
+          message: 'Invalid response format from server',
+        };
+      }
 
       if (!response.ok) {
         return {
           success: false,
-          message: data.message || 'An error occurred',
+          message: data.message || `Request failed with status ${response.status}`,
           errors: data.errors,
         };
       }
@@ -59,6 +104,7 @@ class ApiClient {
         message: data.message,
       };
     } catch (error) {
+      console.error('API request error:', error);
       return {
         success: false,
         message: error instanceof Error ? error.message : 'Network error',
