@@ -34,6 +34,9 @@ legacy/
 api/
 server.js
 
+# Frontend folder (if it still exists, ignore it)
+frontend/
+
 # Database
 database/
 scripts/
