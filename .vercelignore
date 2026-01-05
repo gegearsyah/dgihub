@@ -1,0 +1,48 @@
+# Files to ignore when deploying to Vercel
+
+# Documentation
+*.md
+!README.md
+
+# Development files
+.env.local
+.env.development
+.env.test
+
+# Supabase local files
+supabase/.temp
+supabase/.branches
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# Logs
+*.log
+logs/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Legacy backend
+legacy/
+api/
+server.js
+
+# Database
+database/
+scripts/
+
+# Docker
+docker-compose.yml
+Dockerfile
+
+# Old docs
+docs/
+
+

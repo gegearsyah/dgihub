@@ -1,290 +1,168 @@
-# DGIHub Platform
+# 🎓 DGIHub Platform
 
-> Indonesia's Comprehensive Vocational Training Platform
+> Indonesia's Comprehensive Vocational Training Platform - Fullstack Next.js Application
 
-[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
-[![Node Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
-[![PostgreSQL](https://img.shields.io/badge/postgresql-15+-blue.svg)](https://www.postgresql.org/)
-
-## 🎯 Overview
-
-DGIHub is a multi-tenant platform connecting **Government**, **Training Providers (LPKs)**, and **Employers** through verifiable credentials, skill-based matching, and automated tax incentive management.
-
-### Key Features
-
-- 🎓 **Digital Learning Hub** - Browse, enroll, and complete training programs
-- 🏆 **Verifiable Credentials** - Open Badges 3.0 compliant certificates
-- 🔍 **Talent Matching** - Skill and certificate-based talent search
-- 💰 **Tax Incentive Automation** - 200% Super Tax Deduction (PMK 128/2019)
-- 🔐 **UU PDP Compliant** - Full compliance with Indonesia's data protection law
-- 🌐 **International Recognition** - SKKNI to AQRF mapping for ASEAN mobility
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green)](https://supabase.com/)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://vercel.com/)
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+
-- PostgreSQL 15+
 - npm or yarn
+- Supabase account (free tier works!)
 
 ### Installation
 
 ```bash
-# Clone repository
-git clone <repository-url>
-cd DGIHub
-
 # Install dependencies
 npm install
 
 # Setup environment
-cp .env.example .env
-# Edit .env with your configuration
+cp env.example .env.local
+# Edit .env.local with your Supabase credentials
 
-# Run setup script
-chmod +x scripts/setup.sh
-./scripts/setup.sh
-
-# Run database migrations
-npm run db:migrate
-
-# Seed sample data
-npm run db:seed
-
-# Start backend development server
-npm run dev
-
-# In a separate terminal, start frontend
-cd frontend
-npm install
+# Run development server
 npm run dev
 ```
 
-### Docker (Recommended)
+Visit: `http://localhost:3000`
 
-```bash
-# Start all services
-docker-compose up -d
+**Note**: This is a fullstack Next.js application. The frontend and backend API routes are in the same codebase. No separate backend server is needed!
 
-# Run migrations
-docker-compose exec api npm run db:migrate
+## 📁 Project Structure
 
-# Seed data
-docker-compose exec api npm run db:seed
 ```
+dgihub-platform/
+├── src/                  # Next.js source code
+│   ├── app/              # Next.js app router
+│   │   ├── api/          # API routes (backend)
+│   │   │   └── v1/       # API v1 endpoints
+│   │   │       ├── auth/ # Authentication endpoints
+│   │   │       ├── talenta/ # Learner API
+│   │   │       ├── mitra/   # Training provider API
+│   │   │       └── industri/ # Employer API
+│   │   ├── dashboard/    # Dashboard pages
+│   │   ├── talenta/      # Learner portal pages
+│   │   ├── mitra/        # Training provider portal pages
+│   │   ├── industri/     # Employer portal pages
+│   │   ├── login/        # Login page
+│   │   ├── register/     # Registration page
+│   │   └── layout.tsx    # Root layout
+│   ├── components/       # React components
+│   ├── contexts/         # React contexts (Auth, Theme, Toast)
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Utilities & helpers
+│   └── middleware.ts     # Next.js middleware
+├── public/               # Static assets
+├── supabase/             # Supabase config & migrations
+├── database/             # Database schemas (Prisma, Drizzle, SQL)
+├── scripts/              # Database scripts (migrations, seeding)
+├── docs/                 # Documentation
+├── legacy/               # Old Express backend (archived, not used)
+├── package.json          # Dependencies
+├── next.config.ts        # Next.js config
+├── tsconfig.json         # TypeScript config
+├── vercel.json           # Vercel deployment config
+└── env.example           # Environment variables template
+```
+
+## 🎯 Features
+
+- ✅ **Fullstack Next.js** - Frontend + Backend in one app
+- ✅ **Supabase Database** - PostgreSQL with free tier
+- ✅ **Authentication** - JWT-based auth system
+- ✅ **Multi-tenant** - Talenta, Mitra, Industri portals
+- ✅ **Verifiable Credentials** - Open Badges 3.0
+- ✅ **Dark Mode** - Modern UI with theme support
+- ✅ **i18n Ready** - Indonesian/English support
+
+## 🔧 Environment Variables
+
+Create `.env.local`:
+
+```env
+# Supabase (get from https://app.supabase.com)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# JWT Secrets
+JWT_SECRET=your-secret-key
+JWT_REFRESH_SECRET=your-refresh-secret
+```
+
+## 🗄️ Database Setup
+
+1. Create Supabase project at [supabase.com](https://supabase.com)
+2. Go to SQL Editor
+3. Run `supabase/migrations/001_initial_schema.sql`
+4. Copy credentials to `.env.local`
+
+## 🚀 Deploy to Vercel (FREE!)
+
+1. Push to GitHub
+2. Import to [Vercel](https://vercel.com)
+3. Add environment variables (from `env.example`)
+4. Deploy!
+
+**Cost: $0/month** (Vercel free tier + Supabase free tier)
+
+**Single Server**: This is a fullstack Next.js app - both frontend and API routes deploy together on Vercel. No separate backend deployment needed!
 
 ## 📚 Documentation
 
-- **[Quick Start Guide](QUICK_START.md)** - Get started in 5 minutes
-- **[API Documentation](API_DOCUMENTATION.md)** - Complete API reference
-- **[Pitch Deck](PITCH_DECK.md)** - Business presentation
-- **[Deployment Guide](DEPLOYMENT.md)** - Production deployment
-
-### Detailed Documentation
-
-- **Architecture**: `docs/architecture/`
-- **Security**: `docs/security/`
-- **Compliance**: `docs/compliance/`
-- **Workflows**: `docs/workflows/`
-- **Data Engineering**: `docs/data-engineering/`
-
-## 🏗️ Architecture
-
-### Technology Stack
-
-- **Frontend**: Next.js 16 (React 19) with TypeScript
-- **Backend**: Node.js + Express.js
-- **Database**: PostgreSQL 15
-- **ORM**: Drizzle / Prisma
-- **Security**: AWS CloudHSM, KMS
-- **Cloud**: AWS (Jakarta Region)
-- **Container**: Docker + ECS Fargate
-
-### Standards Compliance
-
-- ✅ W3C Verifiable Credentials
-- ✅ Open Badges 3.0
-- ✅ xAPI (Experience API)
-- ✅ UU PDP Law No. 27/2022
-- ✅ ISO 27001
-- ✅ AQRF (ASEAN Qualifications)
-
-## 📊 Platform Tracks
-
-### 1. Talenta (Learners)
-- Browse and enroll in courses
-- Track learning progress
-- Earn verifiable certificates
-- Apply for jobs
-- Build lifelong learning passport
-
-### 2. Mitra (Training Providers)
-- Create and manage courses
-- Upload training materials
-- Manage participants
-- Issue certificates
-- Track accreditation
-
-### 3. Industri (Employers)
-- Search for talent
-- Verify credentials
-- Manage recruitment
-- Track tax incentives
-- Build talent pool
-
-## 🔐 Security Features
-
-- **Encryption**: End-to-end encryption (TLS 1.3, at-rest)
-- **HSM**: CloudHSM for digital signatures
-- **Access Control**: Role-based with tenant isolation
-- **Audit Logging**: Comprehensive PII access logging
-- **Compliance**: UU PDP Law, ISO 27001
-
-## 📈 Roadmap
-
-### Phase 1: Alpha (Weeks 1-12) ✅
-- Core infrastructure
-- Basic credentialing
-- Learner portal MVP
-
-### Phase 2: Beta (Weeks 13-20)
-- SIPLatih integration
-- Provider portal
-- Enhanced features
-
-### Phase 3: V1 (Weeks 21-32)
-- Tax incentive system
-- Employer portal
-- Production launch
-
-### Phase 4: V2 (Weeks 33-48)
-- International expansion
-- LinkedIn/Europass integration
-- Mobile apps
-
-## 🧪 Testing
-
-```bash
-# Run tests
-npm test
-
-# Run with coverage
-npm test -- --coverage
-
-# Run specific test
-npm test -- auth.test.js
-```
-
-## 📦 Project Structure
-
-```
-DGIHub/
-├── api/                    # API implementation
-│   ├── config/            # Configuration
-│   ├── middleware/       # Express middleware
-│   ├── routes/            # API routes
-│   ├── services/          # Business logic
-│   └── utils/             # Utilities
-├── frontend/              # Next.js frontend application
-│   ├── src/
-│   │   ├── app/          # Next.js app router pages
-│   │   ├── contexts/     # React contexts (Auth, etc.)
-│   │   └── lib/          # Utilities and API client
-│   └── package.json
-├── database/              # Database schemas
-│   └── schema/           # DDL, Drizzle, Prisma
-├── docs/                 # Documentation
-├── scripts/              # Setup scripts
-├── server.js             # Main entry point
-└── package.json          # Backend dependencies
-```
-
-## 🔑 Demo Accounts
-
-After seeding, use these accounts:
-
-| Type | Email | Password |
-|------|-------|----------|
-| Talenta | `talenta@demo.com` | `password123` |
-| Mitra | `mitra@demo.com` | `password123` |
-| Industri | `industri@demo.com` | `password123` |
-
-## 📝 API Examples
-
-### Register User
-
-```bash
-curl -X POST http://localhost:3000/api/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "user@example.com",
-    "password": "password123",
-    "fullName": "John Doe",
-    "userType": "TALENTA",
-    "nik": "3201010101010001"
-  }'
-```
-
-### Login
-
-```bash
-curl -X POST http://localhost:3000/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "talenta@demo.com",
-    "password": "password123"
-  }'
-```
-
-### Get Courses (Authenticated)
-
-```bash
-TOKEN="your-jwt-token"
-curl http://localhost:3000/api/v1/talenta/learning-hub \
-  -H "Authorization: Bearer $TOKEN"
-```
+- [Quick Deploy Guide](./frontend/QUICK_DEPLOY.md) - Step-by-step deployment guide
+- [Fullstack Migration](./frontend/FULLSTACK_MIGRATION.md) - Migration details
+- [API Documentation](./docs/)
+- [Supabase Setup](./supabase/README.md)
+- [Legacy Backend](./legacy/README.md) - Old Express backend (archived)
 
 ## 🛠️ Development
 
-### Environment Setup
-
-1. Install dependencies: `npm install`
-2. Copy `.env.example` to `.env`
-3. Configure database credentials
-4. Run migrations: `npm run db:migrate`
-5. Seed data: `npm run db:seed`
-6. Start dev server: `npm run dev`
-
-### Code Style
-
 ```bash
-# Lint code
-npm run lint
+# Development
+npm run dev
 
-# Fix linting issues
-npm run lint:fix
+# Build
+npm run build
+
+# Production
+npm start
+
+# Lint
+npm run lint
 ```
+
+## 📝 API Routes
+
+All API routes are at `/api/v1/`:
+
+- `POST /api/v1/auth/register` - Register user
+- `POST /api/v1/auth/login` - Login
+- `GET /api/v1/talenta/courses` - Get courses
+- `GET /api/v1/mitra/courses` - Manage courses
+- `GET /api/v1/industri/jobs` - Manage jobs
+
+## 🏗️ Architecture
+
+- **Frontend**: Next.js 16 (App Router)
+- **Backend**: Next.js API Routes
+- **Database**: Supabase PostgreSQL
+- **Auth**: JWT tokens
+- **Deployment**: Vercel
 
 ## 📄 License
 
 Proprietary - All rights reserved
 
-## 🤝 Contributing
+## 👥 Contributors
 
-This is a proprietary project. For contributions, please contact the development team.
-
-## 📞 Support
-
-- **Documentation**: See `docs/` folder
-- **API Docs**: See `API_DOCUMENTATION.md`
-- **Issues**: Contact development team
-
-## 🎯 Status
-
-**Current Version**: 1.0.0 MVP  
-**Status**: Ready for Demo and Pitch  
-**Next Milestone**: Beta Release with SIPLatih Integration
+DGIHub Development Team
 
 ---
 
-**Built with ❤️ for Indonesia's Future Workforce**
+**Built with ❤️ for Indonesia's vocational training ecosystem**

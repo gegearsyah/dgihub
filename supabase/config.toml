@@ -1,0 +1,47 @@
+# Supabase Configuration for DGIHub Platform
+# This file configures Supabase project settings
+
+[project]
+# Your Supabase project reference ID
+# Get this from: https://app.supabase.com/project/_/settings/general
+project_id = "your-project-id"
+
+[api]
+# API URL - Replace with your Supabase project URL
+url = "https://your-project-id.supabase.co"
+# API Key - Replace with your Supabase anon key
+anon_key = "your-anon-key"
+# Service Role Key - Replace with your Supabase service_role key (keep secret!)
+service_role_key = "your-service-role-key"
+
+[auth]
+# Authentication settings
+enabled = true
+# JWT expiry time (in seconds)
+jwt_expiry = 3600
+# Refresh token expiry time (in seconds)
+refresh_token_expiry = 604800
+
+[database]
+# Database connection settings
+# These are automatically configured when using Supabase
+host = "db.your-project-id.supabase.co"
+port = 5432
+database = "postgres"
+user = "postgres"
+# Password is managed by Supabase
+
+[storage]
+# Storage bucket configuration
+enabled = true
+# Bucket for certificate files
+certificates_bucket = "certificates"
+# Bucket for profile images
+profiles_bucket = "profiles"
+# Bucket for workshop materials
+materials_bucket = "materials"
+
+[realtime]
+# Realtime subscriptions
+enabled = true
+
