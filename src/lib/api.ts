@@ -69,10 +69,12 @@ class ApiClient {
           };
         }
         
-        // If response is OK but not JSON, return success with empty data
+        // If response is OK but not JSON, return success with undefined data
+        // This is an edge case - API should normally return JSON
         return {
           success: true,
-          data: text || undefined,
+          data: undefined as T,
+          message: text || 'Request successful but no data returned',
         };
       }
 
