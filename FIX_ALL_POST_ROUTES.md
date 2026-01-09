@@ -116,3 +116,6 @@ Vercel's Next.js deployment:
 
 The 405 error means "Method Not Allowed" - Vercel didn't recognize the route handler, so it couldn't allow the POST method.
 
+
+
+

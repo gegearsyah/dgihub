@@ -30,3 +30,6 @@ The application now uses:
 - **Database**: Supabase PostgreSQL
 - **Deployment**: Single Next.js application on Vercel
 
+
+
+

@@ -240,3 +240,6 @@ WHERE tc.constraint_type = 'FOREIGN KEY'
 
 **All errors should be fixed after running the updated migration!** ✅
 
+
+
+
