@@ -3,7 +3,9 @@
  * Handles all API requests to the backend
  */
 
-// Use Next.js API routes (same origin)
+// Use external backend URL if set, otherwise use Next.js API routes (same origin)
+// Set NEXT_PUBLIC_API_URL in Vercel environment variables to use external backend
+// Example: NEXT_PUBLIC_API_URL=https://dgihub-backend.onrender.com/api/v1
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 
 export interface ApiResponse<T = any> {
