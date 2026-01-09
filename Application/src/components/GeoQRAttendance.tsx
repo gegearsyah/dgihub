@@ -212,7 +212,7 @@ export default function GeoQRAttendance({
       {location && (
         <div className="mb-4 p-4 bg-[#0D1B2A] rounded-lg">
           <div className="flex items-center gap-2 mb-2">
-            <LocationOnIcon className="text-[#2D6A4F]" />
+            <MapPin className="h-5 w-5 text-primary" />
             <span className="text-sm text-[#E0E1DD]">Location Verified</span>
           </div>
           {distance !== null && (

@@ -11,84 +11,81 @@ export default function LearningPassport() {
   const profileStrength = 80; // Example strength value
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Profile Strength Bar */}
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-        <Typography variant="body1" mr={2}>
-          Profile Strength:
-        </Typography>
-        <div style={{ flex: 1, backgroundColor: '#e0e0e0', borderRadius: '8px', overflow: 'hidden' }}>
+      <div className="flex items-center gap-4 mb-4">
+        <span className="text-sm font-medium text-foreground">Profile Strength:</span>
+        <div className="flex-1 bg-muted rounded-lg overflow-hidden h-3">
           <div
-            style={{
-              width: `${profileStrength}%`,
-              backgroundColor: '#2563EB',
-              height: '12px',
-            }}
+            className="bg-primary h-full transition-all"
+            style={{ width: `${profileStrength}%` }}
           ></div>
         </div>
-        <Typography variant="body2" ml={2}>
-          {profileStrength}%
-        </Typography>
+        <span className="text-sm text-muted-foreground">{profileStrength}%</span>
       </div>
-      <Typography variant="h4" align="center" mb={2}>
+
+      <h2 className="text-2xl font-bold text-center text-foreground mb-4">
         Learning Passport
-      </Typography>
+      </h2>
 
       {/* Portfolio Section */}
-      <Typography variant="h6" mb={1} mt={2}>
-        Artifact Vault
-      </Typography>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
-        {mockPortfolioArtifacts.map((artifact: any) => (
-          <Card key={artifact.id} sx={{ minHeight: 150, textAlign: 'center', position: 'relative' }}>
-            <CardContent>
-              <Typography>{artifact.name}</Typography>
-              <IconButton size="small" sx={{ mt: 1 }}>
-                <AddPhotoIcon />
-              </IconButton>
-            </CardContent>
-            {artifact.verified && (
-              <Badge
-                badgeContent={<VerifiedIcon />}
-                sx={{ position: 'absolute', top: 8, right: 8 }}
-                color="primary"
-              />
-            )}
-          </Card>
-        ))}
+      <div>
+        <h3 className="text-lg font-semibold text-foreground mb-3">Artifact Vault</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {mockPortfolioArtifacts.map((artifact: any) => (
+            <Card key={artifact.id} className="relative min-h-[150px] text-center">
+              <CardContent className="pt-6">
+                <p className="text-foreground mb-2">{artifact.name}</p>
+                <Button variant="ghost" size="sm" className="mt-2">
+                  <ImagePlus className="h-4 w-4 mr-2" />
+                  Add Photo
+                </Button>
+              </CardContent>
+              {artifact.verified && (
+                <Badge className="absolute top-2 right-2" variant="default">
+                  <CheckCircle2 className="h-3 w-3 mr-1" />
+                  Verified
+                </Badge>
+              )}
+            </Card>
+          ))}
+        </div>
       </div>
 
       {/* Incentive Wallet Section */}
-      <Typography variant="h6" mt={4} mb={1}>
-        Incentive Wallet
-      </Typography>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
-        <Card sx={{ textAlign: 'center', p: 2 }}>
-          <Typography variant="body1" fontWeight="bold">Training Vouchers</Typography>
-          <Typography color="text.secondary" mt={1}>2 Active Vouchers</Typography>
-        </Card>
-        <Card sx={{ textAlign: 'center', p: 2 }}>
-          <Typography variant="body1" fontWeight="bold">Cash Disbursements</Typography>
-          <Typography color="text.secondary" mt={1}>Rp 700,000 Pending</Typography>
-        </Card>
+      <div>
+        <h3 className="text-lg font-semibold text-foreground mb-3">Incentive Wallet</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Card className="text-center p-4">
+            <p className="font-semibold text-foreground">Training Vouchers</p>
+            <p className="text-sm text-muted-foreground mt-2">2 Active Vouchers</p>
+          </Card>
+          <Card className="text-center p-4">
+            <p className="font-semibold text-foreground">Cash Disbursements</p>
+            <p className="text-sm text-muted-foreground mt-2">Rp 700,000 Pending</p>
+          </Card>
+        </div>
       </div>
 
       {/* Credential Section */}
-      <Typography variant="h6" mt={4} mb={1}>
-        Credentials
-      </Typography>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '16px' }}>
-        {mockCertificates.map((certificate) => (
-          <Card key={certificate.sertifikat_id} sx={{ minHeight: 150, textAlign: 'center', position: 'relative' }}>
-            <CardContent>
-              <Typography fontWeight="bold">{certificate.title}</Typography>
-              <Typography variant="body2" mt={1}>{new Date(certificate.issued_date).toLocaleDateString()}</Typography>
-              <IconButton size="small" sx={{ mt: 1 }} color="primary">
-                <VerifiedIcon />
-              </IconButton>
-            </CardContent>
-          </Card>
-        ))}
+      <div>
+        <h3 className="text-lg font-semibold text-foreground mb-3">Credentials</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {mockCertificates.map((certificate) => (
+            <Card key={certificate.sertifikat_id} className="relative min-h-[150px] text-center">
+              <CardContent className="pt-6">
+                <p className="font-bold text-foreground">{certificate.title}</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  {new Date(certificate.issued_date).toLocaleDateString()}
+                </p>
+                <Button variant="ghost" size="sm" className="mt-2">
+                  <CheckCircle2 className="h-4 w-4 mr-2" />
+                  Verified
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

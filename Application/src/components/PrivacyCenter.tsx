@@ -71,7 +71,7 @@ export default function PrivacyCenter({
       {/* Processing Record */}
       <div className="bg-[#1B263B] border border-[#415A77] rounded-lg p-6">
         <div className="flex items-center gap-2 mb-4">
-          <HistoryIcon className="text-[#2D6A4F]" />
+          <History className="h-5 w-5 text-primary" />
           <h3 className="text-lg font-semibold text-[#E0E1DD]">Processing Record</h3>
         </div>
         <p className="text-sm text-[#C5C6C0] mb-4">
