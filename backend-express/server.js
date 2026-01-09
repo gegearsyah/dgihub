@@ -263,9 +263,14 @@ app.post('/api/v1/auth/register', async (req, res) => {
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 DGIHub Backend running on port ${PORT}`);
-  console.log(`📍 Health check: http://localhost:${PORT}/health`);
-});
+// Export for Vercel serverless
+module.exports = app;
+
+// Start server (only when running locally)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🚀 DGIHub Backend running on port ${PORT}`);
+    console.log(`📍 Health check: http://localhost:${PORT}/health`);
+  });
+}
 
