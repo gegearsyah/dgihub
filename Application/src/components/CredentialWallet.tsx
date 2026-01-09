@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { CheckCircle2 } from 'lucide-react';
 import { aqrfColors } from '@/lib/design-system';
 
 interface Credential {
@@ -97,7 +97,7 @@ function CredentialCard({ credential, isSelected, onSelect }: CredentialCardProp
           
           {/* Verify Status */}
           <div className="flex items-center gap-1 text-[#2D6A4F]">
-            <CheckCircleIcon fontSize="small" />
+            <CheckCircle2 className="h-4 w-4" />
             <span className="text-xs font-medium">Verified</span>
           </div>
           

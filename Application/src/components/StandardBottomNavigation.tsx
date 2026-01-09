@@ -2,21 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import HomeIcon from '@mui/icons-material/Home';
-import SchoolIcon from '@mui/icons-material/School';
-import WorkIcon from '@mui/icons-material/Work';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import PersonIcon from '@mui/icons-material/Person';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import SearchIcon from '@mui/icons-material/Search';
-import GroupIcon from '@mui/icons-material/Group';
+import { Home, GraduationCap, Briefcase, Wallet, User, TrendingUp, ClipboardList, Search, Users } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from '@/hooks/useTranslation';
 
 type NavigationItem = {
   label: string;
-  icon: React.ReactNode;
+  icon: React.ComponentType<{ className?: string }>;
   path: string;
   userTypes: ('TALENTA' | 'MITRA' | 'INDUSTRI')[];
 };
@@ -40,27 +32,27 @@ export default function StandardBottomNavigation() {
 
   // Role-based navigation items - Maximum 5 items for mobile-first design
   const talentaNav: NavigationItem[] = [
-    { label: t('nav.home'), icon: <HomeIcon />, path: '/dashboard', userTypes: ['TALENTA'] },
-    { label: t('nav.courses'), icon: <SchoolIcon />, path: '/talenta/courses', userTypes: ['TALENTA'] },
-    { label: t('nav.myCourses'), icon: <AssignmentIcon />, path: '/talenta/my-courses', userTypes: ['TALENTA'] },
-    { label: t('nav.wallet'), icon: <AccountBalanceWalletIcon />, path: '/talenta/certificates', userTypes: ['TALENTA'] },
-    { label: t('nav.profile'), icon: <PersonIcon />, path: '/profile', userTypes: ['TALENTA'] },
+    { label: t('nav.home'), icon: Home, path: '/dashboard', userTypes: ['TALENTA'] },
+    { label: t('nav.courses'), icon: GraduationCap, path: '/talenta/courses', userTypes: ['TALENTA'] },
+    { label: t('nav.myCourses'), icon: ClipboardList, path: '/talenta/my-courses', userTypes: ['TALENTA'] },
+    { label: t('nav.wallet'), icon: Wallet, path: '/talenta/certificates', userTypes: ['TALENTA'] },
+    { label: t('nav.profile'), icon: User, path: '/profile', userTypes: ['TALENTA'] },
   ];
 
   const mitraNav: NavigationItem[] = [
-    { label: t('nav.home'), icon: <HomeIcon />, path: '/dashboard', userTypes: ['MITRA'] },
-    { label: t('nav.courses'), icon: <SchoolIcon />, path: '/mitra/courses', userTypes: ['MITRA'] },
-    { label: t('nav.workshops'), icon: <WorkIcon />, path: '/mitra/workshops', userTypes: ['MITRA'] },
-    { label: t('nav.analytics'), icon: <AnalyticsIcon />, path: '/mitra/analytics', userTypes: ['MITRA'] },
-    { label: t('nav.profile'), icon: <PersonIcon />, path: '/profile', userTypes: ['MITRA'] },
+    { label: t('nav.home'), icon: Home, path: '/dashboard', userTypes: ['MITRA'] },
+    { label: t('nav.courses'), icon: GraduationCap, path: '/mitra/courses', userTypes: ['MITRA'] },
+    { label: t('nav.workshops'), icon: Briefcase, path: '/mitra/workshops', userTypes: ['MITRA'] },
+    { label: t('nav.analytics'), icon: TrendingUp, path: '/mitra/analytics', userTypes: ['MITRA'] },
+    { label: t('nav.profile'), icon: User, path: '/profile', userTypes: ['MITRA'] },
   ];
 
   const industriNav: NavigationItem[] = [
-    { label: t('nav.home'), icon: <HomeIcon />, path: '/dashboard', userTypes: ['INDUSTRI'] },
-    { label: t('nav.jobs'), icon: <WorkIcon />, path: '/industri/jobs', userTypes: ['INDUSTRI'] },
-    { label: t('nav.search'), icon: <SearchIcon />, path: '/industri/search', userTypes: ['INDUSTRI'] },
-    { label: t('nav.talentPool'), icon: <GroupIcon />, path: '/industri/talent-pool', userTypes: ['INDUSTRI'] },
-    { label: t('nav.profile'), icon: <PersonIcon />, path: '/profile', userTypes: ['INDUSTRI'] },
+    { label: t('nav.home'), icon: Home, path: '/dashboard', userTypes: ['INDUSTRI'] },
+    { label: t('nav.jobs'), icon: Briefcase, path: '/industri/jobs', userTypes: ['INDUSTRI'] },
+    { label: t('nav.search'), icon: Search, path: '/industri/search', userTypes: ['INDUSTRI'] },
+    { label: t('nav.talentPool'), icon: Users, path: '/industri/talent-pool', userTypes: ['INDUSTRI'] },
+    { label: t('nav.profile'), icon: User, path: '/profile', userTypes: ['INDUSTRI'] },
   ];
 
   const getNavItems = (): NavigationItem[] => {
@@ -108,9 +100,7 @@ export default function StandardBottomNavigation() {
               }`}
               aria-label={item.label}
             >
-              <div className={isActive ? 'text-primary' : ''}>
-                {item.icon}
-              </div>
+              <item.icon className={`h-5 w-5 ${isActive ? 'text-primary' : ''}`} />
               <span className="text-xs font-medium">{item.label}</span>
               {isActive && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-t-full" />

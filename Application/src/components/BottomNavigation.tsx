@@ -1,31 +1,40 @@
+'use client';
+
 import React from 'react';
-import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import SchoolIcon from '@mui/icons-material/School';
-import WalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import ProfileIcon from '@mui/icons-material/Person';
+import { Home, GraduationCap, Wallet, User } from 'lucide-react';
 
 export default function CustomBottomNavigation() {
   const [value, setValue] = React.useState(0);
 
+  const navItems = [
+    { label: 'Home', icon: Home, path: '/dashboard' },
+    { label: 'Courses', icon: GraduationCap, path: '/talenta/courses' },
+    { label: 'Wallet', icon: Wallet, path: '/talenta/certificates' },
+    { label: 'Profile', icon: User, path: '/profile' },
+  ];
+
   return (
-    <BottomNavigation
-      value={value}
-      onChange={(event, newValue) => {
-        setValue(newValue);
-      }}
-      sx={{
-        position: 'fixed',
-        bottom: 0,
-        width: '100%',
-        boxShadow: '0px -1px 4px rgba(0,0,0,0.2)',
-        zIndex: 1000
-      }}
-    >
-      <BottomNavigationAction label="Home" icon={<HomeIcon />} />
-      <BottomNavigationAction label="Courses" icon={<SchoolIcon />} />
-      <BottomNavigationAction label="Wallet" icon={<WalletIcon />} />
-      <BottomNavigationAction label="Profile" icon={<ProfileIcon />} />
-    </BottomNavigation>
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-lg border-t border-border shadow-lg">
+      <div className="flex items-center justify-around h-16 max-w-md mx-auto">
+        {navItems.map((item, index) => {
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.path}
+              onClick={() => {
+                setValue(index);
+                // Navigation would be handled by router
+              }}
+              className={`flex flex-col items-center justify-center gap-1 flex-1 transition-colors ${
+                value === index ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+              <span className="text-xs">{item.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
   );
 }

@@ -2,9 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ErrorIcon from '@mui/icons-material/Error';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { CheckCircle2, XCircle, MapPin } from 'lucide-react';
 
 interface GeoQRAttendanceProps {
   workshopId: string;
@@ -228,7 +226,7 @@ export default function GeoQRAttendance({
       {/* Status Messages */}
       {scanStatus === 'success' && (
         <div className="mb-4 p-4 bg-[#2D6A4F]/20 border border-[#2D6A4F] rounded-lg flex items-center gap-3">
-          <CheckCircleIcon className="text-[#2D6A4F]" fontSize="large" />
+          <CheckCircle2 className="h-8 w-8 text-primary" />
           <div>
             <p className="text-[#E0E1DD] font-semibold">Location Verified</p>
             <p className="text-sm text-[#C5C6C0]">
@@ -240,7 +238,7 @@ export default function GeoQRAttendance({
 
       {scanStatus === 'error' && (
         <div className="mb-4 p-4 bg-[#BA1A1A]/20 border border-[#BA1A1A] rounded-lg flex items-center gap-3">
-          <ErrorIcon className="text-[#BA1A1A]" fontSize="large" />
+          <XCircle className="h-8 w-8 text-destructive" />
           <div>
             <p className="text-[#E0E1DD] font-semibold">
               {distance && distance > GEOFENCE_RADIUS ? 'Out of Range' : 'Invalid QR'}
@@ -273,7 +271,7 @@ export default function GeoQRAttendance({
           </>
         ) : (
           <>
-            <LocationOnIcon />
+            <MapPin className="h-5 w-5" />
             <span>Verify Location & Record Attendance</span>
           </>
         )}

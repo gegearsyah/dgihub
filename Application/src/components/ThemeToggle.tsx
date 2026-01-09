@@ -1,8 +1,7 @@
 'use client';
 
 import { useTheme } from '@/contexts/ThemeContext';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { Sun, Moon } from 'lucide-react';
 
 interface ThemeToggleProps {
   className?: string;
@@ -18,9 +17,9 @@ export default function ThemeToggle({ className = '' }: ThemeToggleProps) {
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
       {theme === 'dark' ? (
-        <LightModeIcon className="text-[#E0E1DD] hover:text-[#2D6A4F] transition-colors" />
+        <Sun className="h-5 w-5 text-foreground hover:text-primary transition-colors" />
       ) : (
-        <DarkModeIcon className="text-[#0D1B2A] hover:text-[#2D6A4F] transition-colors" />
+        <Moon className="h-5 w-5 text-foreground hover:text-primary transition-colors" />
       )}
     </button>
   );

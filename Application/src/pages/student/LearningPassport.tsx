@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
-import { Card, CardContent, Typography, IconButton, Badge } from '@mui/material';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import AddPhotoIcon from '@mui/icons-material/AddPhotoAlternate';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { CheckCircle2, ImagePlus } from 'lucide-react';
 import { mockCertificates, mockPortfolioArtifacts } from '@/lib/mockData';
 
 export default function LearningPassport() {

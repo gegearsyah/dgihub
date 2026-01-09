@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import PendingIcon from '@mui/icons-material/Pending';
-import WarningIcon from '@mui/icons-material/Warning';
+import { CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
 import { colors } from '@/lib/design-system';
 
 interface FiscalData {
@@ -160,9 +158,9 @@ export default function FiscalIncentiveDashboard({
             >
               <div className="flex items-center gap-3">
                 {status === 'checked' ? (
-                  <CheckCircleIcon className="text-[#2D6A4F]" />
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
                 ) : (
-                  <PendingIcon className="text-[#fbbf24]" />
+                  <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
                 )}
                 <span className="text-[#E0E1DD] capitalize">
                   {key.replace(/([A-Z])/g, ' $1').trim()}

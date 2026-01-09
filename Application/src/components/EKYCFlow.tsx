@@ -1,10 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ErrorIcon from '@mui/icons-material/Error';
-import FaceIcon from '@mui/icons-material/Face';
+import { Camera, CheckCircle2, XCircle, User } from 'lucide-react';
 
 interface EKYCFlowProps {
   onComplete?: (data: {
@@ -183,7 +180,7 @@ export default function EKYCFlow({ onComplete, onError }: EKYCFlowProps) {
           <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
             step === 'complete' ? 'bg-[#2D6A4F] text-white' : 'bg-[#415A77] text-[#C5C6C0]'
           }`}>
-            {step === 'complete' ? <CheckCircleIcon fontSize="small" /> : '3'}
+            {step === 'complete' ? <CheckCircle2 className="h-4 w-4" /> : '3'}
           </div>
           <span className="text-sm font-medium">Complete</span>
         </div>
@@ -226,7 +223,7 @@ export default function EKYCFlow({ onComplete, onError }: EKYCFlowProps) {
             onClick={captureDocument}
             className="w-full px-6 py-3 bg-[#2D6A4F] hover:bg-[#2D6A4F]/80 text-white rounded-lg font-medium transition-colors touch-target flex items-center justify-center gap-2"
           >
-            <CameraAltIcon />
+            <Camera className="h-6 w-6" />
             <span>Capture Document</span>
           </button>
         </div>
@@ -274,7 +271,7 @@ export default function EKYCFlow({ onComplete, onError }: EKYCFlowProps) {
               onClick={performLivenessCheck}
               className="w-full px-6 py-3 bg-[#2D6A4F] hover:bg-[#2D6A4F]/80 text-white rounded-lg font-medium transition-colors touch-target flex items-center justify-center gap-2"
             >
-              <FaceIcon />
+              <User className="h-6 w-6" />
               <span>Start Liveness Check</span>
             </button>
           )}
@@ -300,7 +297,7 @@ export default function EKYCFlow({ onComplete, onError }: EKYCFlowProps) {
       {/* Complete Step */}
       {step === 'complete' && (
         <div className="bg-[#1B263B] border border-[#2D6A4F] rounded-lg p-6 text-center">
-          <CheckCircleIcon className="text-[#2D6A4F] mx-auto mb-4" style={{ fontSize: '64px' }} />
+          <CheckCircle2 className="h-16 w-16 text-primary mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-[#E0E1DD] mb-2">Verification Complete</h3>
           <p className="text-sm text-[#C5C6C0] mb-4">
             Your identity has been verified successfully.

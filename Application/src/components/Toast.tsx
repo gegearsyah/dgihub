@@ -2,11 +2,7 @@
 
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ErrorIcon from '@mui/icons-material/Error';
-import WarningIcon from '@mui/icons-material/Warning';
-import InfoIcon from '@mui/icons-material/Info';
-import CloseIcon from '@mui/icons-material/Close';
+import { CheckCircle2, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -33,17 +29,17 @@ export default function Toast({ toast, onClose }: ToastProps) {
   }, [toast.id, toast.duration, onClose]);
 
   const icons = {
-    success: <CheckCircleIcon className="text-[#2D6A4F]" />,
-    error: <ErrorIcon className="text-[#BA1A1A]" />,
-    warning: <WarningIcon className="text-[#fbbf24]" />,
-    info: <InfoIcon className="text-[#3b82f6]" />,
+    success: <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />,
+    error: <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />,
+    warning: <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />,
+    info: <Info className="h-5 w-5 text-blue-600 dark:text-blue-400" />,
   };
 
   const bgColors = {
-    success: 'bg-[#2D6A4F]/20 border-[#2D6A4F]',
-    error: 'bg-[#BA1A1A]/20 border-[#BA1A1A]',
-    warning: 'bg-[#fbbf24]/20 border-[#fbbf24]',
-    info: 'bg-[#3b82f6]/20 border-[#3b82f6]',
+    success: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+    error: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
+    warning: 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800',
+    info: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
   };
 
   return (
@@ -56,16 +52,16 @@ export default function Toast({ toast, onClose }: ToastProps) {
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 mt-0.5">{icons[toast.type]}</div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-[#E0E1DD] break-words">
+          <p className="text-sm font-medium text-foreground break-words">
             {toast.message}
           </p>
         </div>
         <button
           onClick={() => onClose(toast.id)}
-          className="flex-shrink-0 text-[#C5C6C0] hover:text-[#E0E1DD] transition-colors touch-target"
+          className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors touch-target"
           aria-label="Close"
         >
-          <CloseIcon fontSize="small" />
+          <X className="h-4 w-4" />
         </button>
       </div>
     </motion.div>

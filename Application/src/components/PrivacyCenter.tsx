@@ -1,11 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import HistoryIcon from '@mui/icons-material/History';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-import ToggleOffIcon from '@mui/icons-material/ToggleOff';
-import WarningIcon from '@mui/icons-material/Warning';
+import { Trash2, History, ToggleLeft, ToggleRight, AlertTriangle } from 'lucide-react';
 
 interface ProcessingRecord {
   id: string;
@@ -139,9 +135,9 @@ export default function PrivacyCenter({
                 aria-label={`Toggle ${key}`}
               >
                 {value ? (
-                  <ToggleOnIcon className="text-[#2D6A4F]" fontSize="large" />
+                  <ToggleRight className="h-6 w-6 text-primary" />
                 ) : (
-                  <ToggleOffIcon className="text-[#6b7280]" fontSize="large" />
+                  <ToggleLeft className="h-6 w-6 text-muted-foreground" />
                 )}
               </button>
             </div>
@@ -152,7 +148,7 @@ export default function PrivacyCenter({
       {/* Right to Deletion */}
       <div className="bg-[#1B263B] border border-[#BA1A1A] rounded-lg p-6 border-2">
         <div className="flex items-center gap-2 mb-4">
-          <DeleteForeverIcon className="text-[#BA1A1A]" />
+          <Trash2 className="h-5 w-5 text-destructive" />
           <h3 className="text-lg font-semibold text-[#E0E1DD]">Right to Deletion</h3>
         </div>
         <p className="text-sm text-[#C5C6C0] mb-4">
@@ -162,7 +158,7 @@ export default function PrivacyCenter({
         {deleteCountdown !== null && deleteCountdown > 0 && (
           <div className="mb-4 p-4 bg-[#BA1A1A]/20 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
-              <WarningIcon className="text-[#BA1A1A]" />
+              <AlertTriangle className="h-5 w-5 text-destructive" />
               <span className="text-[#E0E1DD] font-semibold">Deletion Request Pending</span>
             </div>
             <p className="text-sm text-[#C5C6C0]">
@@ -179,7 +175,7 @@ export default function PrivacyCenter({
             onClick={handleDeleteRequest}
             className="w-full px-6 py-3 bg-[#BA1A1A] hover:bg-[#BA1A1A]/80 text-white rounded-lg font-medium transition-colors touch-target flex items-center justify-center gap-2"
           >
-            <DeleteForeverIcon />
+            <Trash2 className="h-5 w-5" />
             <span>Request Account & Data Deletion</span>
           </button>
         ) : (
