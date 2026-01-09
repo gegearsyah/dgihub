@@ -187,8 +187,8 @@ export default function TranscriptPage() {
                     No courses enrolled yet
                   </p>
                 ) : (
-                  transcript.enrollments.map((enrollment: any) => (
-                    <div key={enrollment.enrollment_id} className={`rounded-lg p-4 ${
+                  transcript.enrollments.map((enrollment: any, index: number) => (
+                    <div key={enrollment.enrollment_id || `enrollment-${index}`} className={`rounded-lg p-4 ${
                       isDark ? 'bg-[#0D1B2A] border border-[#415A77]' : 'bg-gray-50 border border-gray-200'
                     }`}>
                       <div className="flex items-start justify-between mb-3">
@@ -269,9 +269,9 @@ export default function TranscriptPage() {
                     No certificates yet
                   </p>
                 ) : (
-                  transcript.certificates.map((cert: any) => (
+                  transcript.certificates.map((cert: any, index: number) => (
                     <CertificateCard
-                      key={cert.sertifikat_id}
+                      key={cert.sertifikat_id || cert.certificate_id || `cert-${index}`}
                       certificateId={cert.sertifikat_id}
                       title={cert.title}
                       certificateNumber={cert.certificate_number}
