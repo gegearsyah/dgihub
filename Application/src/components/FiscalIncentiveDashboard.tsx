@@ -113,7 +113,7 @@ export default function FiscalIncentiveDashboard({
           </div>
           {data.deadlineAlert && (
             <div className="mt-2 flex items-center gap-1 text-[#BA1A1A] text-xs">
-              <WarningIcon fontSize="small" />
+              <AlertTriangle className="h-4 w-4" />
               <span>72hr deadline alert</span>
             </div>
           )}
