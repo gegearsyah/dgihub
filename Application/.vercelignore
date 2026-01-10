@@ -1,0 +1,6 @@
+# Vercel ignore file
+# This ensures Vercel doesn't try to deploy files outside the Application folder
+
+# Ignore everything except Application folder
+/*
+!/Application
