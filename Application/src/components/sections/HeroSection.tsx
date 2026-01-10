@@ -15,22 +15,23 @@ const HeroSection = () => {
       <div className="container relative pt-32 pb-20 md:pt-40 md:pb-32">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 border border-secondary/30 mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 border border-border mb-8 animate-fade-in">
             <Shield className="w-4 h-4 text-secondary" />
-            <span className="text-sm font-medium text-primary-foreground/90">
+            <span className="text-sm font-medium text-foreground">
               Terintegrasi dengan NIK & SIPLatih
             </span>
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary-foreground leading-tight mb-6 animate-fade-in-up">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight mb-6 animate-fade-in-up">
             Paspor Pembelajaran{" "}
-            <span className="text-gradient-gold">Seumur Hidup</span>{" "}
-            untuk Tenaga Kerja Indonesia
+            <span className="text-secondary">Seumur Hidup</span>{" "}
+            untuk Tenaga Kerja{" "}
+            <span className="text-secondary">Indonesia</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-primary-foreground/70 max-w-2xl mx-auto mb-10 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
             Platform digital terpadu yang menghubungkan pendidikan vokasi, industri, dan pemerintah. 
             Verifikasi kredensial, lacak kompetensi, dan akses peluang kerja dalam satu ekosistem.
           </p>
@@ -43,7 +44,7 @@ const HeroSection = () => {
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10">
+            <Button asChild variant="outline" size="lg" className="border-border text-foreground hover:bg-muted">
               <Link href="/login">
                 Masuk
               </Link>
@@ -54,15 +55,15 @@ const HeroSection = () => {
           <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">2.5M+</div>
-              <div className="text-sm text-primary-foreground/60">Pembelajar Terdaftar</div>
+              <div className="text-sm text-muted-foreground">Pembelajar Terdaftar</div>
             </div>
-            <div className="text-center border-x border-primary-foreground/10">
+            <div className="text-center border-x border-border">
               <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">15K+</div>
-              <div className="text-sm text-primary-foreground/60">Lembaga Pelatihan</div>
+              <div className="text-sm text-muted-foreground">Lembaga Pelatihan</div>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">8K+</div>
-              <div className="text-sm text-primary-foreground/60">Mitra Industri</div>
+              <div className="text-sm text-muted-foreground">Mitra Industri</div>
             </div>
           </div>
         </div>
@@ -88,14 +89,14 @@ const HeroSection = () => {
           ].map((feature, index) => (
             <div
               key={feature.title}
-              className="group p-6 rounded-2xl bg-primary-foreground/5 border border-primary-foreground/10 backdrop-blur-sm hover:bg-primary-foreground/10 transition-all duration-300 animate-fade-in-up"
+              className="group p-6 rounded-2xl bg-card/50 border border-border backdrop-blur-sm hover:bg-card transition-all duration-300 animate-fade-in-up"
               style={{ animationDelay: `${0.4 + index * 0.1}s` }}
             >
               <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <feature.icon className="w-6 h-6 text-secondary" />
               </div>
-              <h3 className="text-lg font-semibold text-primary-foreground mb-2">{feature.title}</h3>
-              <p className="text-sm text-primary-foreground/60">{feature.description}</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+              <p className="text-sm text-muted-foreground">{feature.description}</p>
             </div>
           ))}
         </div>

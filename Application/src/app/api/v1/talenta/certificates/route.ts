@@ -7,6 +7,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest, authorizeUserType } from '@/lib/api-helpers';
 import { supabaseAdmin } from '@/lib/db';
 
+// Runtime configuration for Vercel
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const auth = await authenticateRequest(request);

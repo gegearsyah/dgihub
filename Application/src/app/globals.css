@@ -81,30 +81,44 @@
   }
 
   .dark {
+    /* Primary - Gold (for buttons, highlights) */
     --primary: 38 92% 50%;
     --primary-foreground: 220 70% 10%;
     
+    /* Secondary - Navy (for secondary elements) */
     --secondary: 220 60% 30%;
     --secondary-foreground: 220 20% 95%;
     
+    /* Background - Deep Navy (main background) */
     --background: 220 70% 8%;
     --foreground: 220 20% 95%;
     
+    /* Card - Slightly lighter navy */
     --card: 220 60% 12%;
     --card-foreground: 220 20% 95%;
     
+    /* Popover - Same as card */
     --popover: 220 60% 12%;
     --popover-foreground: 220 20% 95%;
     
+    /* Muted - Medium navy for subtle elements */
     --muted: 220 50% 18%;
-    --muted-foreground: 220 15% 65%;
+    --muted-foreground: 220 15% 70%;
     
+    /* Accent - Gold tinted */
     --accent: 38 60% 20%;
-    --accent-foreground: 38 92% 65%;
+    --accent-foreground: 38 92% 70%;
     
-    --border: 220 50% 20%;
-    --input: 220 50% 20%;
+    /* Borders - Visible but subtle */
+    --border: 220 50% 25%;
+    --input: 220 50% 25%;
     --ring: 38 92% 50%;
+    
+    /* Update gradients for dark mode */
+    --gradient-primary: linear-gradient(135deg, hsl(220 70% 18%) 0%, hsl(220 60% 28%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(45 95% 58%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(220 70% 8%) 0%, hsl(220 60% 12%) 50%, hsl(220 50% 15%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(220 60% 12%) 0%, hsl(220 50% 15%) 100%);
   }
 }
 
