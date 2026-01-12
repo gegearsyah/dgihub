@@ -53,7 +53,7 @@ export default function CourseMaterialsPage() {
       setLoading(true);
       const response = await apiClient.getCourseMaterials(courseId);
       if (response.success && response.data) {
-        setMaterials(response.data);
+        setMaterials(Array.isArray(response.data) ? response.data : []);
       }
     } catch (error) {
       console.error('Failed to load materials:', error);

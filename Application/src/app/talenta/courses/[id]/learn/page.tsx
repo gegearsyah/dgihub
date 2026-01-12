@@ -37,10 +37,11 @@ export default function LearnPage() {
       setLoading(true);
       const response = await apiClient.getCourseMaterials(courseId);
       if (response.success && response.data) {
-        setMaterials(response.data);
+        const materialsArray = Array.isArray(response.data) ? response.data : [];
+        setMaterials(materialsArray);
         // Set first incomplete material or first material
-        const incomplete = response.data.find((m: any) => !m.completed);
-        setCurrentMaterial(incomplete || response.data[0]);
+        const incomplete = materialsArray.find((m: any) => !m.completed);
+        setCurrentMaterial(incomplete || materialsArray[0]);
       }
     } catch (error) {
       console.error('Failed to load materials:', error);
