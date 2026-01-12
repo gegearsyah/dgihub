@@ -25,7 +25,7 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await authenticateRequest(request);
@@ -35,7 +35,7 @@ export async function POST(
     const authError = authorizeUserType(user, 'TALENTA');
     if (authError) return authError;
 
-    const workshopId = params.id;
+    const { id: workshopId } = await params;
     const body = await request.json();
     const { latitude, longitude } = body;
 

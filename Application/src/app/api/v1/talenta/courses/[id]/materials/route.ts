@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await authenticateRequest(request);
@@ -22,7 +22,7 @@ export async function GET(
     const authError = authorizeUserType(user, 'TALENTA');
     if (authError) return authError;
 
-    const courseId = params.id;
+    const { id: courseId } = await params;
 
     if (!supabaseAdmin) {
       return NextResponse.json(

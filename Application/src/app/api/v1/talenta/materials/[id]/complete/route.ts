@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await authenticateRequest(request);
@@ -22,7 +22,7 @@ export async function POST(
     const authError = authorizeUserType(user, 'TALENTA');
     if (authError) return authError;
 
-    const materialId = params.id;
+    const { id: materialId } = await params;
 
     if (!supabaseAdmin) {
       return NextResponse.json(
