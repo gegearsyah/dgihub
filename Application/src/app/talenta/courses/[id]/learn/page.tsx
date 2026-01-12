@@ -4,201 +4,310 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockCourses } from '@/lib/mockData';
+import { apiClient } from '@/lib/api';
+import AppLayout from '@/components/AppLayout';
+import VideoPlayer from '@/components/VideoPlayer';
+import DocumentViewer from '@/components/DocumentViewer';
+import QuizViewer from '@/components/QuizViewer';
+import { Play, FileText, HelpCircle, CheckCircle2, Circle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 export default function LearnPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
   const params = useParams();
   const courseId = params?.id as string;
-  const [course, setCourse] = useState<any>(null);
+  const [materials, setMaterials] = useState<any[]>([]);
   const [currentMaterial, setCurrentMaterial] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [completing, setCompleting] = useState(false);
 
   useEffect(() => {
-    const foundCourse = mockCourses.find(c => c.kursus_id === courseId && c.is_enrolled);
-    if (foundCourse) {
-      setCourse(foundCourse);
-      // Set first incomplete material or first material
-      const incomplete = foundCourse.materials?.find((m: any) => !m.completed);
-      setCurrentMaterial(incomplete || foundCourse.materials?.[0]);
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
     }
-  }, [courseId]);
+    loadMaterials();
+  }, [courseId, isAuthenticated]);
 
-  const handleComplete = () => {
-    if (currentMaterial) {
-      // Mock: Mark as completed
-      alert('Material completed!');
-      // Move to next material
-      const currentIndex = course.materials.findIndex((m: any) => m.id === currentMaterial.id);
-      if (currentIndex < course.materials.length - 1) {
-        setCurrentMaterial(course.materials[currentIndex + 1]);
+  const loadMaterials = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.getCourseMaterials(courseId);
+      if (response.success && response.data) {
+        setMaterials(response.data);
+        // Set first incomplete material or first material
+        const incomplete = response.data.find((m: any) => !m.completed);
+        setCurrentMaterial(incomplete || response.data[0]);
       }
+    } catch (error) {
+      console.error('Failed to load materials:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (!course || !currentMaterial) {
+  const handleMaterialComplete = async () => {
+    if (!currentMaterial || currentMaterial.completed) return;
+
+    try {
+      setCompleting(true);
+      const response = await apiClient.markMaterialComplete(currentMaterial.materi_id);
+      if (response.success) {
+        // Update material status
+        setMaterials((prev) =>
+          prev.map((m) =>
+            m.materi_id === currentMaterial.materi_id
+              ? { ...m, completed: true, completedAt: new Date().toISOString() }
+              : m
+          )
+        );
+        setCurrentMaterial((prev: any) => ({
+          ...prev,
+          completed: true,
+          completedAt: new Date().toISOString()
+        }));
+
+        // Move to next incomplete material
+        const nextIncomplete = materials.find(
+          (m) => !m.completed && m.materi_id !== currentMaterial.materi_id
+        );
+        if (nextIncomplete) {
+          setCurrentMaterial(nextIncomplete);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to mark material as complete:', error);
+    } finally {
+      setCompleting(false);
+    }
+  };
+
+  const handleQuizComplete = async (result: any) => {
+    // Quiz completion is handled by QuizViewer
+    // Just update the material status if passed
+    if (result.passed) {
+      await handleMaterialComplete();
+    }
+  };
+
+  const getMaterialIcon = (type: string) => {
+    switch (type) {
+      case 'VIDEO':
+        return <Play className="w-4 h-4" />;
+      case 'QUIZ':
+        return <HelpCircle className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-      </div>
+      <AppLayout>
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading course materials...</p>
+          </div>
+        </div>
+      </AppLayout>
     );
   }
 
+  if (!materials || materials.length === 0) {
+    return (
+      <AppLayout>
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <Card className="p-8 text-center">
+            <p className="text-muted-foreground mb-4">No materials available for this course.</p>
+            <Button asChild variant="outline">
+              <Link href={`/talenta/courses/${courseId}`}>Back to Course</Link>
+            </Button>
+          </Card>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  const completedCount = materials.filter((m) => m.completed).length;
+  const progress = (completedCount / materials.length) * 100;
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <div className="w-80 bg-white shadow-lg overflow-y-auto">
-        <div className="p-4 border-b">
-          <Link href={`/talenta/courses/${courseId}`} className="text-sm text-indigo-600 hover:text-indigo-800">
-            ← Back to Course
-          </Link>
-          <h2 className="font-semibold mt-2">{course.title}</h2>
-        </div>
-        <div className="p-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Course Materials</h3>
-          <div className="space-y-2">
-            {course.materials?.map((material: any, index: number) => (
-              <button
-                key={material.id}
-                onClick={() => setCurrentMaterial(material)}
-                className={`w-full text-left p-3 rounded-lg transition-all ${
-                  currentMaterial.id === material.id
-                    ? 'bg-indigo-100 border-2 border-indigo-500'
-                    : material.completed
-                    ? 'bg-green-50 border border-green-200'
-                    : 'bg-gray-50 border border-gray-200 hover:bg-gray-100'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium text-gray-500">#{index + 1}</span>
-                    <span className="text-sm">{material.title}</span>
-                  </div>
-                  {material.completed && <span className="text-green-600">✓</span>}
-                </div>
-                <div className="text-xs text-gray-500 mt-1">{material.duration}</div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-4xl mx-auto p-8">
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <div className="mb-6">
-              <div className="flex items-center space-x-2 mb-2">
-                {currentMaterial.type === 'video' && <span className="text-2xl">▶️</span>}
-                {currentMaterial.type === 'document' && <span className="text-2xl">📄</span>}
-                {currentMaterial.type === 'quiz' && <span className="text-2xl">📝</span>}
-                <h1 className="text-2xl font-bold">{currentMaterial.title}</h1>
+    <AppLayout>
+      <div className="min-h-screen bg-background flex">
+        {/* Sidebar */}
+        <div className="w-80 bg-card border-r border-border overflow-y-auto">
+          <div className="p-4 border-b border-border">
+            <Link
+              href={`/talenta/courses/${courseId}`}
+              className="text-sm text-primary hover:underline mb-2 inline-block"
+            >
+              ← Back to Course
+            </Link>
+            <div className="mt-4">
+              <h2 className="font-semibold text-foreground mb-2">Course Materials</h2>
+              <div className="text-sm text-muted-foreground">
+                {completedCount} / {materials.length} completed
               </div>
-              <p className="text-gray-600">{currentMaterial.duration}</p>
-            </div>
-
-            {/* Video Player Mock */}
-            {currentMaterial.type === 'video' && (
-              <div className="mb-6">
-                <div className="bg-black aspect-video rounded-lg flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <div className="text-6xl mb-4">▶</div>
-                    <p className="text-lg">Video Player</p>
-                    <p className="text-sm text-gray-400 mt-2">Video content would play here</p>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="flex space-x-2">
-                    <button className="px-4 py-2 bg-gray-200 rounded-lg">⏮ Previous</button>
-                    <button className="px-4 py-2 bg-gray-200 rounded-lg">⏭ Next</button>
-                  </div>
-                  <button
-                    onClick={handleComplete}
-                    className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                  >
-                    Mark as Complete
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Document Viewer Mock */}
-            {currentMaterial.type === 'document' && (
-              <div className="mb-6">
-                <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-                  <div className="text-6xl mb-4">📄</div>
-                  <p className="text-lg font-medium mb-2">Document Viewer</p>
-                  <p className="text-sm text-gray-600 mb-4">
-                    PDF or document content would be displayed here
-                  </p>
-                  <button className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    Open Document
-                  </button>
-                </div>
-                <div className="mt-4 flex justify-end">
-                  <button
-                    onClick={handleComplete}
-                    className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                  >
-                    Mark as Complete
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Quiz Mock */}
-            {currentMaterial.type === 'quiz' && (
-              <div className="mb-6">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-4">
-                  <p className="font-medium mb-2">Quiz: {currentMaterial.title}</p>
-                  <p className="text-sm text-gray-600">20 questions • 30 minutes</p>
-                </div>
-                <div className="space-y-4">
-                  <div className="border rounded-lg p-4">
-                    <p className="font-medium mb-3">Question 1 of 20</p>
-                    <p className="mb-4">What is the main advantage of microservices architecture?</p>
-                    <div className="space-y-2">
-                      {['Scalability', 'Simplicity', 'Cost', 'Speed'].map((option, idx) => (
-                        <label key={idx} className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                          <input type="radio" name="answer" className="mr-3" />
-                          <span>{option}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <button className="px-4 py-2 bg-gray-200 rounded-lg">Previous</button>
-                    <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                      Next Question
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Course Progress */}
-            <div className="border-t pt-6">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-gray-600">Course Progress</span>
-                <span className="text-sm font-semibold">
-                  {course.materials.filter((m: any) => m.completed).length} / {course.materials.length} completed
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-muted rounded-full h-2 mt-2">
                 <div
-                  className="bg-indigo-600 h-2 rounded-full"
-                  style={{
-                    width: `${(course.materials.filter((m: any) => m.completed).length / course.materials.length) * 100}%`
-                  }}
-                ></div>
+                  className="bg-primary h-2 rounded-full transition-all"
+                  style={{ width: `${progress}%` }}
+                />
               </div>
             </div>
           </div>
+          <div className="p-4 space-y-2">
+            {materials.map((material, index) => {
+              const isActive = currentMaterial?.materi_id === material.materi_id;
+              return (
+                <button
+                  key={material.materi_id}
+                  onClick={() => setCurrentMaterial(material)}
+                  className={cn(
+                    'w-full text-left p-3 rounded-lg transition-all',
+                    isActive
+                      ? 'bg-primary/10 border-2 border-primary'
+                      : material.completed
+                      ? 'bg-success/10 border border-success/30'
+                      : 'bg-muted/50 border border-border hover:bg-muted'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      {getMaterialIcon(material.material_type)}
+                      <span className="text-sm font-medium text-foreground truncate">
+                        {index + 1}. {material.title}
+                      </span>
+                    </div>
+                    {material.completed ? (
+                      <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
+                    ) : (
+                      <Circle className="w-4 h-4 text-muted-foreground shrink-0" />
+                    )}
+                  </div>
+                  {material.duration_seconds && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {Math.floor(material.duration_seconds / 60)} min
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-5xl mx-auto p-8">
+            {currentMaterial && (
+              <div className="space-y-6">
+                <div>
+                  <h1 className="text-3xl font-bold text-foreground mb-2">
+                    {currentMaterial.title}
+                  </h1>
+                  {currentMaterial.description && (
+                    <p className="text-muted-foreground">{currentMaterial.description}</p>
+                  )}
+                </div>
+
+                {/* Video Player */}
+                {currentMaterial.material_type === 'VIDEO' && currentMaterial.file_url && (
+                  <VideoPlayer
+                    src={currentMaterial.file_url}
+                    title={currentMaterial.title}
+                    onComplete={handleMaterialComplete}
+                  />
+                )}
+
+                {/* Document Viewer */}
+                {(currentMaterial.material_type === 'PDF' ||
+                  currentMaterial.material_type === 'DOCUMENT') &&
+                  currentMaterial.file_url && (
+                    <DocumentViewer
+                      src={currentMaterial.file_url}
+                      title={currentMaterial.title}
+                      fileType={currentMaterial.file_type}
+                      onComplete={handleMaterialComplete}
+                    />
+                  )}
+
+                {/* Quiz Viewer */}
+                {currentMaterial.material_type === 'QUIZ' && (
+                  <QuizViewer
+                    materialId={currentMaterial.materi_id}
+                    quizData={
+                      currentMaterial.description
+                        ? typeof currentMaterial.description === 'string'
+                          ? JSON.parse(currentMaterial.description)
+                          : currentMaterial.description
+                        : { questions: [] }
+                    }
+                    onComplete={handleQuizComplete}
+                  />
+                )}
+
+                {/* Link Material */}
+                {currentMaterial.material_type === 'LINK' && currentMaterial.file_url && (
+                  <Card className="p-6">
+                    <p className="text-muted-foreground mb-4">
+                      This material is an external link. Click below to open it.
+                    </p>
+                    <Button
+                      asChild
+                      className="w-full"
+                      onClick={handleMaterialComplete}
+                    >
+                      <a href={currentMaterial.file_url} target="_blank" rel="noopener noreferrer">
+                        Open Link
+                      </a>
+                    </Button>
+                  </Card>
+                )}
+
+                {/* Navigation */}
+                <div className="flex justify-between pt-4 border-t border-border">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      const currentIndex = materials.findIndex(
+                        (m) => m.materi_id === currentMaterial.materi_id
+                      );
+                      if (currentIndex > 0) {
+                        setCurrentMaterial(materials[currentIndex - 1]);
+                      }
+                    }}
+                    disabled={
+                      materials.findIndex((m) => m.materi_id === currentMaterial.materi_id) === 0
+                    }
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const currentIndex = materials.findIndex(
+                        (m) => m.materi_id === currentMaterial.materi_id
+                      );
+                      if (currentIndex < materials.length - 1) {
+                        setCurrentMaterial(materials[currentIndex + 1]);
+                      }
+                    }}
+                    disabled={
+                      materials.findIndex((m) => m.materi_id === currentMaterial.materi_id) ===
+                      materials.length - 1
+                    }
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 }
-
-
-

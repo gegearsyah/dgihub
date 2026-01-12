@@ -226,12 +226,18 @@ export default function MitraCoursesPage() {
                     </div>
                   )}
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href={`/mitra/courses/${course.kursus_id}/materials`}
+                    className="flex-1 text-center px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 text-sm transition-colors"
+                  >
+                    Manage Materials
+                  </Link>
                   <Link
                     href={`/mitra/courses/${course.kursus_id}/participants`}
                     className="flex-1 text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 text-sm transition-colors"
                   >
-                    View Participants ({course.enrollment_count || 0})
+                    Participants ({course.enrollment_count || 0})
                   </Link>
                   <Link
                     href={`/mitra/certificates/issue?courseId=${course.kursus_id}`}

@@ -28,7 +28,15 @@ When Root Directory is wrong, Vercel:
 7. **Click "Save"**
 8. **Redeploy**: Go to Deployments → Click "..." on latest → "Redeploy"
 
-### Step 2: Verify Build Settings
+### Step 2: Configure Include Files/Folders
+
+**IMPORTANT**: After setting Root Directory, also configure:
+1. In Settings → General
+2. Look for **"Include Files/Folders"** or similar option
+3. **Configure to include files and folders beside the Application folder** if needed
+4. This ensures Vercel can access any shared resources outside the Application folder
+
+### Step 3: Verify Build Settings
 
 In Vercel Settings → General, verify:
 - **Framework Preset**: Next.js (auto-detected)
@@ -36,8 +44,9 @@ In Vercel Settings → General, verify:
 - **Output Directory**: `.next` (default)
 - **Install Command**: `npm install` (or leave default)
 - **Root Directory**: `Application` ✅
+- **Include Files/Folders**: Configured to include files beside Application ✅
 
-### Step 3: Check Environment Variables
+### Step 4: Check Environment Variables
 
 Go to **Settings** → **Environment Variables**, ensure these are set:
 
@@ -49,7 +58,7 @@ JWT_SECRET=your-jwt-secret
 JWT_REFRESH_SECRET=your-refresh-secret
 ```
 
-### Step 4: Check Build Logs
+### Step 5: Check Build Logs
 
 1. Go to **Deployments** tab
 2. Click on the latest deployment
@@ -59,7 +68,7 @@ JWT_REFRESH_SECRET=your-refresh-secret
    - ❌ TypeScript errors → Check code
    - ❌ Build timeout → Check dependencies
 
-### Step 5: Check Function Logs
+### Step 6: Check Function Logs
 
 1. In deployment, go to **Functions** tab
 2. Check for runtime errors
@@ -67,6 +76,10 @@ JWT_REFRESH_SECRET=your-refresh-secret
    - ❌ "Module not found" → Root Directory wrong
    - ❌ "Cannot read property" → Code error
    - ❌ Timeout → Database connection issue
+
+## 💡 Key Configuration Note
+
+**Important**: When setting Root Directory to `Application`, also configure the "Include Files/Folders" setting to include files and folders beside the Application folder. This was the key to making the deployment work!
 
 ## 🧪 Test After Fix
 

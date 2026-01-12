@@ -74,29 +74,47 @@ export default function TalentPoolPage() {
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Talent Pool</h1>
-          <p className="text-gray-400">Manage your saved candidates and potential hires</p>
+          <h1 className={`text-3xl font-bold mb-2 ${
+            isDark ? 'text-foreground' : 'text-gray-900'
+          }`}>Talent Pool</h1>
+          <p className={isDark ? 'text-muted-foreground' : 'text-gray-600'}>
+            Manage your saved candidates and potential hires
+          </p>
         </div>
 
         {/* Filters */}
-        <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6 mb-8">
+        <div className={`rounded-lg p-6 mb-8 border ${
+          isDark ? 'bg-card border-border' : 'bg-white border-gray-200 shadow-sm'
+        }`}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Search</label>
+              <label className={`block text-sm font-medium mb-2 ${
+                isDark ? 'text-foreground' : 'text-gray-700'
+              }`}>Search</label>
               <input
                 type="text"
                 value={filters.search}
                 onChange={(e) => setFilters({ ...filters, search: e.target.value })}
                 placeholder="Search by name, skills..."
-                className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500"
+                className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isDark
+                    ? 'bg-muted border-border text-foreground placeholder:text-muted-foreground'
+                    : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500'
+                }`}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Minimum AQRF Level</label>
+              <label className={`block text-sm font-medium mb-2 ${
+                isDark ? 'text-foreground' : 'text-gray-700'
+              }`}>Minimum AQRF Level</label>
               <select
                 value={filters.minAQRF}
                 onChange={(e) => setFilters({ ...filters, minAQRF: e.target.value })}
-                className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-indigo-500"
+                className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isDark
+                    ? 'bg-muted border-border text-foreground'
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
               >
                 <option value="">All Levels</option>
                 {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
@@ -105,14 +123,16 @@ export default function TalentPoolPage() {
               </select>
             </div>
             <div className="flex items-end">
-              <label className="flex items-center">
+              <label className={`flex items-center cursor-pointer ${
+                isDark ? 'text-foreground' : 'text-gray-700'
+              }`}>
                 <input
                   type="checkbox"
                   checked={filters.hasCertificates}
                   onChange={(e) => setFilters({ ...filters, hasCertificates: e.target.checked })}
-                  className="mr-2 w-4 h-4"
+                  className="mr-2 w-4 h-4 accent-blue-600"
                 />
-                <span className="text-sm text-gray-300">Has Certificates Only</span>
+                <span className="text-sm">Has Certificates Only</span>
               </label>
             </div>
           </div>
@@ -122,11 +142,15 @@ export default function TalentPoolPage() {
         <div className="space-y-4">
           {talentPool.length === 0 ? (
             <div className="flex items-center justify-center min-h-[400px]">
-              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-12 text-center max-w-md mx-auto">
-                <p className="text-gray-400 mb-4">No talent in your pool yet</p>
+              <div className={`rounded-lg p-12 text-center max-w-md mx-auto border ${
+                isDark ? 'bg-card border-border' : 'bg-white border-gray-200 shadow-sm'
+              }`}>
+                <p className={isDark ? 'text-muted-foreground mb-4' : 'text-gray-600 mb-4'}>
+                  No talent in your pool yet
+                </p>
                 <Link
                   href="/industri/search"
-                  className="inline-block px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+                  className="inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                 >
                   Search for Talent
                 </Link>
@@ -134,40 +158,65 @@ export default function TalentPoolPage() {
             </div>
           ) : (
             talentPool.map((talent: any) => (
-              <div key={talent.talenta_id} className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+              <div 
+                key={talent.talenta_id || talent.id || `talent-${talent.full_name}`}
+                className={`rounded-lg p-6 border ${
+                  isDark ? 'bg-card border-border' : 'bg-white border-gray-200 shadow-sm'
+                }`}
+              >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-white mb-1">{talent.full_name}</h3>
-                    <p className="text-sm text-gray-400 mb-2">{talent.email}</p>
-                    <p className="text-sm text-gray-400">
+                    <h3 className={`text-xl font-semibold mb-1 ${
+                      isDark ? 'text-foreground' : 'text-gray-900'
+                    }`}>{talent.full_name}</h3>
+                    <p className={`text-sm mb-2 ${
+                      isDark ? 'text-muted-foreground' : 'text-gray-600'
+                    }`}>{talent.email}</p>
+                    <p className={`text-sm ${
+                      isDark ? 'text-muted-foreground' : 'text-gray-600'
+                    }`}>
                       📍 {talent.city}, {talent.province}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
                     {talent.match_score > 0 && (
-                      <span className="px-3 py-1 bg-indigo-500/20 text-indigo-400 rounded-full text-sm border border-indigo-500/30">
+                      <span className={`px-3 py-1 rounded-full text-sm border ${
+                        isDark
+                          ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+                          : 'bg-blue-100 text-blue-700 border-blue-300'
+                      }`}>
                         Match: {talent.match_score}
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
+                <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm ${
+                  isDark ? 'text-muted-foreground' : 'text-gray-600'
+                }`}>
                   <div>
-                    <span className="text-gray-400">Certificates:</span>
-                    <span className="ml-2 text-white font-medium">{talent.certificate_count || 0}</span>
+                    <span>Certificates:</span>
+                    <span className={`ml-2 font-medium ${
+                      isDark ? 'text-foreground' : 'text-gray-900'
+                    }`}>{talent.certificate_count || 0}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400">AQRF Level:</span>
-                    <span className="ml-2 text-white font-medium">{talent.aqrf_level || 'N/A'}</span>
+                    <span>AQRF Level:</span>
+                    <span className={`ml-2 font-medium ${
+                      isDark ? 'text-foreground' : 'text-gray-900'
+                    }`}>{talent.aqrf_level || 'N/A'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400">Max AQRF:</span>
-                    <span className="ml-2 text-white font-medium">{talent.max_aqrf_level || 'N/A'}</span>
+                    <span>Max AQRF:</span>
+                    <span className={`ml-2 font-medium ${
+                      isDark ? 'text-foreground' : 'text-gray-900'
+                    }`}>{talent.max_aqrf_level || 'N/A'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400">SKKNI Codes:</span>
-                    <span className="ml-2 text-white font-medium">
+                    <span>SKKNI Codes:</span>
+                    <span className={`ml-2 font-medium ${
+                      isDark ? 'text-foreground' : 'text-gray-900'
+                    }`}>
                       {talent.skkni_codes?.length || 0}
                     </span>
                   </div>
@@ -175,12 +224,16 @@ export default function TalentPoolPage() {
 
                 <div className="flex gap-2">
                   <Link
-                    href={`/industri/talenta/${talent.talenta_id}`}
-                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm"
+                    href={`/industri/talenta/${talent.talenta_id || talent.id}`}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
                   >
                     View Profile
                   </Link>
-                  <button className="px-4 py-2 border border-gray-600 hover:border-gray-500 text-gray-300 rounded-lg text-sm">
+                  <button className={`px-4 py-2 rounded-lg text-sm border transition-colors ${
+                    isDark
+                      ? 'border-border text-foreground hover:bg-muted'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}>
                     Remove from Pool
                   </button>
                 </div>

@@ -302,6 +302,40 @@ class ApiClient {
       method: 'GET',
     });
   }
+
+  // Course Materials
+  async getCourseMaterials(courseId: string) {
+    return this.request(`/talenta/courses/${courseId}/materials`);
+  }
+
+  async createCourseMaterial(courseId: string, materialData: any) {
+    return this.request(`/mitra/courses/${courseId}/materials`, {
+      method: 'POST',
+      body: JSON.stringify(materialData),
+    });
+  }
+
+  async markMaterialComplete(materialId: string) {
+    return this.request(`/talenta/materials/${materialId}/complete`, {
+      method: 'POST',
+    });
+  }
+
+  // Quizzes
+  async submitQuiz(materialId: string, answers: Record<string, any>) {
+    return this.request(`/talenta/quizzes/${materialId}/submit`, {
+      method: 'POST',
+      body: JSON.stringify({ answers }),
+    });
+  }
+
+  // Workshop Attendance
+  async recordWorkshopAttendance(workshopId: string, location: { latitude: number; longitude: number }) {
+    return this.request(`/talenta/workshops/${workshopId}/attendance`, {
+      method: 'POST',
+      body: JSON.stringify(location),
+    });
+  }
 }
 
 export const apiClient = new ApiClient(API_BASE_URL);

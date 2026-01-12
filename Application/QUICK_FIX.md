@@ -19,7 +19,13 @@
 5. Type: `Application` (exactly this, no quotes)
 6. Click **"Save"**
 
-### Step 3: Redeploy
+### Step 3: Configure Include Files/Folders (IMPORTANT!)
+1. In the same Settings → General page
+2. Look for **"Include Files/Folders"** or similar option
+3. Configure to **include files and folders beside the Application folder** if needed
+4. This ensures Vercel can access any shared resources
+
+### Step 4: Redeploy
 1. Go to **Deployments** tab
 2. Click **"..."** on the latest deployment
 3. Click **"Redeploy"**
@@ -47,10 +53,15 @@ Vercel Dashboard
 - ❌ `Application/` (no trailing slash)
 - ❌ `application` (must be capital A)
 - ❌ Forgetting to redeploy after change
+- ❌ Not configuring "Include Files/Folders" if needed
 
 ## 🎯 That's It!
 
 Once Root Directory is set to `Application` and you redeploy, everything should work.
+
+## 💡 Important Note
+
+**When configuring Root Directory, also check "Include Files/Folders" settings to include files and folders beside the Application folder if needed. This was the key to making it work!**
 
 ---
 

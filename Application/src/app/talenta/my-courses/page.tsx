@@ -142,7 +142,11 @@ export default function MyCoursesPage() {
                 </div>
 
                 <Link
-                  href={`/talenta/courses/${enrollment.kursus_id}`}
+                  href={enrollment.kursus_id 
+                    ? (enrollment.status === 'COMPLETED' 
+                      ? `/talenta/certificates` 
+                      : `/talenta/courses/${enrollment.kursus_id}/learn`)
+                    : '/talenta/courses'}
                   className="block w-full text-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors touch-target"
                 >
                   {enrollment.status === 'COMPLETED' ? 'View Certificate' : 'Continue Learning'}

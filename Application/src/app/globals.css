@@ -14,22 +14,22 @@
     --secondary: 38 92% 50%;
     --secondary-foreground: 220 70% 10%;
     
-    /* Background & Surfaces */
-    --background: 220 20% 98%;
-    --foreground: 220 70% 12%;
+    /* Background & Surfaces - Improved contrast for light mode */
+    --background: 220 20% 99%;
+    --foreground: 220 70% 8%;
     
     --card: 0 0% 100%;
-    --card-foreground: 220 70% 12%;
+    --card-foreground: 220 70% 8%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 220 70% 12%;
+    --popover-foreground: 220 70% 8%;
     
-    /* Muted & Accent */
-    --muted: 220 15% 94%;
-    --muted-foreground: 220 10% 45%;
+    /* Muted & Accent - Better contrast */
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 10% 40%;
     
     --accent: 38 92% 95%;
-    --accent-foreground: 38 92% 30%;
+    --accent-foreground: 38 92% 25%;
     
     /* States */
     --destructive: 0 72% 51%;

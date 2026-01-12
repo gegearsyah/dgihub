@@ -3,6 +3,7 @@
 import { GraduationCap, Building2, Briefcase, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const portals = [
   {
@@ -14,7 +15,7 @@ const portals = [
     color: "from-blue-500 to-blue-600",
     bgColor: "bg-blue-500/10",
     borderColor: "border-blue-500/20",
-    href: "/talenta/dashboard",
+    href: "/dashboard",
     features: [
       "Profil kompetensi berbasis SKKNI/KKNI",
       "Wallet kredensial digital terverifikasi",
@@ -31,7 +32,7 @@ const portals = [
     color: "from-emerald-500 to-emerald-600",
     bgColor: "bg-emerald-500/10",
     borderColor: "border-emerald-500/20",
-    href: "/mitra/dashboard",
+    href: "/dashboard",
     description: "Manajemen program pelatihan terintegrasi dengan sistem pemerintah",
     features: [
       "Integrasi SIPLatih & akreditasi",
@@ -49,7 +50,7 @@ const portals = [
     color: "from-amber-500 to-amber-600",
     bgColor: "bg-amber-500/10",
     borderColor: "border-amber-500/20",
-    href: "/industri/dashboard",
+    href: "/dashboard",
     description: "Rekrutmen berbasis kompetensi dengan insentif Super Tax Deduction",
     features: [
       "Pencarian talent skill-based",
@@ -62,6 +63,8 @@ const portals = [
 ];
 
 const PortalsSection = () => {
+  const router = useRouter();
+
   return (
     <section id="portals" className="py-20 md:py-32 bg-background">
       <div className="container">
@@ -73,7 +76,7 @@ const PortalsSection = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Satu Ekosistem untuk Semua Stakeholder
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-foreground/80">
             Platform multi-tenant yang dirancang untuk kebutuhan spesifik setiap pemangku kepentingan
             dalam ekosistem vokasi Indonesia.
           </p>
@@ -87,16 +90,23 @@ const PortalsSection = () => {
               className={`group relative rounded-2xl border ${portal.borderColor} bg-card p-8 hover:shadow-card-hover transition-all duration-300 animate-fade-in-up`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              {/* Icon */}
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${portal.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+              {/* Icon - Clickable */}
+              <Link 
+                href="/"
+                className={`block w-14 h-14 rounded-2xl bg-gradient-to-br ${portal.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform cursor-pointer`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push('/');
+                }}
+              >
                 <portal.icon className="w-7 h-7 text-white" />
-              </div>
+              </Link>
 
               {/* Content */}
               <div className="mb-6">
-                <span className="text-sm text-muted-foreground">{portal.subtitle}</span>
+                <span className="text-sm text-foreground/70">{portal.subtitle}</span>
                 <h3 className="text-xl font-bold text-foreground mt-1 mb-3">{portal.title}</h3>
-                <p className="text-muted-foreground text-sm">{portal.description}</p>
+                <p className="text-foreground/80 text-sm">{portal.description}</p>
               </div>
 
               {/* Features */}
@@ -104,7 +114,7 @@ const PortalsSection = () => {
                 {portal.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2 text-sm">
                     <CheckCircle2 className="w-4 h-4 text-success mt-0.5 shrink-0" />
-                    <span className="text-muted-foreground">{feature}</span>
+                    <span className="text-foreground/70">{feature}</span>
                   </li>
                 ))}
               </ul>

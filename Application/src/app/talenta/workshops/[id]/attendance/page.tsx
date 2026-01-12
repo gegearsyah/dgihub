@@ -4,189 +4,265 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockWorkshops } from '@/lib/mockData';
+import { apiClient } from '@/lib/api';
+import AppLayout from '@/components/AppLayout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapPin, CheckCircle2, XCircle, Loader2, AlertCircle } from 'lucide-react';
 
 export default function WorkshopAttendancePage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
   const params = useParams();
   const workshopId = params?.id as string;
   const [workshop, setWorkshop] = useState<any>(null);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [locationError, setLocationError] = useState<string>('');
-  const [isRecording, setIsRecording] = useState(false);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [distance, setDistance] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const foundWorkshop = mockWorkshops.find(w => w.workshop_id === workshopId);
-    if (foundWorkshop) {
-      setWorkshop(foundWorkshop);
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
     }
-  }, [workshopId]);
+    // Load workshop data if needed
+    // For now, we'll use the workshopId directly
+  }, [isAuthenticated]);
 
-  const getCurrentLocation = () => {
-    setIsRecording(true);
-    setLocationError('');
-
-    // Mock GPS location (in real app, use navigator.geolocation)
-    setTimeout(() => {
-      const mockLat = workshop?.latitude || -6.2088;
-      const mockLon = workshop?.longitude || 106.8456;
-      // Add small random offset to simulate real GPS
-      const lat = mockLat + (Math.random() - 0.5) * 0.001;
-      const lon = mockLon + (Math.random() - 0.5) * 0.001;
-
-      setLocation({ latitude: lat, longitude: lon });
-      setIsRecording(false);
-    }, 2000);
-  };
-
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const R = 6371000; // Earth radius in meters
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
 
-  const handleSubmitAttendance = () => {
-    if (!location || !workshop) return;
+  const getCurrentLocation = () => {
+    setIsGettingLocation(true);
+    setLocationError('');
+    setLocation(null);
+    setDistance(null);
 
-    const distance = calculateDistance(
-      location.latitude,
-      location.longitude,
-      workshop.latitude,
-      workshop.longitude
-    );
-
-    if (distance > 100) {
-      setLocationError(`You are ${Math.round(distance)}m away from the workshop location. Please move closer.`);
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by your browser');
+      setIsGettingLocation(false);
       return;
     }
 
-    // Mock attendance submission
-    alert('Attendance recorded successfully!');
-    router.push('/talenta/my-courses');
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setLocation({ latitude, longitude });
+
+        // If workshop has location, calculate distance
+        if (workshop?.latitude && workshop?.longitude) {
+          const dist = calculateDistance(
+            latitude,
+            longitude,
+            workshop.latitude,
+            workshop.longitude
+          );
+          setDistance(dist);
+        }
+
+        setIsGettingLocation(false);
+      },
+      (error) => {
+        let errorMessage = 'Failed to get location';
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = 'Location access denied. Please enable location permissions.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = 'Location information unavailable.';
+            break;
+          case error.TIMEOUT:
+            errorMessage = 'Location request timed out.';
+            break;
+        }
+        setLocationError(errorMessage);
+        setIsGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    );
   };
 
-  if (!workshop) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
+  const handleSubmitAttendance = async () => {
+    if (!location) {
+      setLocationError('Please get your location first');
+      return;
+    }
 
-  const distance = location && workshop
-    ? calculateDistance(location.latitude, location.longitude, workshop.latitude, workshop.longitude)
-    : null;
+    if (distance !== null && distance > 100) {
+      setLocationError(`You are ${Math.round(distance)}m away. Please move within 100m.`);
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const response = await apiClient.recordWorkshopAttendance(workshopId, location);
+      
+      if (response.success) {
+        router.push('/talenta/my-courses');
+      } else {
+        setLocationError(response.message || 'Failed to record attendance');
+      }
+    } catch (error) {
+      console.error('Attendance submission error:', error);
+      setLocationError('Failed to record attendance. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/talenta/courses" className="text-xl font-bold text-gray-900">
-                ← Back
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Workshop Attendance</h1>
-          <p className="text-gray-600 mb-6">{workshop.title}</p>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-blue-800">
-              <strong>Location Verification Required:</strong> Please enable location services and ensure
-              you are at the workshop location to record attendance.
-            </p>
-          </div>
-
-          <div className="mb-6">
-            <h3 className="font-semibold mb-2">Workshop Location</h3>
-            <p className="text-gray-700">{workshop.location_name}</p>
-            <p className="text-gray-600 text-sm">{workshop.city}, {workshop.province}</p>
-            <p className="text-gray-600 text-sm">
-              {new Date(workshop.start_date).toLocaleDateString()} • {workshop.start_time} - {workshop.end_time}
-            </p>
-          </div>
-
-          <div className="mb-6">
-            <button
-              onClick={getCurrentLocation}
-              disabled={isRecording}
-              className="w-full px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isRecording ? 'Getting Location...' : '📍 Get My Location'}
-            </button>
-          </div>
-
-          {location && (
-            <div className="mb-6">
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium text-green-800">Location Captured</span>
-                  {distance !== null && distance <= 100 && (
-                    <span className="text-green-600 text-sm">✓ Within range</span>
-                  )}
+    <AppLayout>
+      <div className="min-h-screen bg-background">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Workshop Attendance</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {workshop && (
+                <div>
+                  <h3 className="font-semibold mb-2">{workshop.title}</h3>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <MapPin className="w-4 h-4" />
+                    <span>
+                      {workshop.location_name || workshop.city}, {workshop.province}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-sm text-gray-700 space-y-1">
-                  <p>Latitude: {location.latitude.toFixed(6)}</p>
-                  <p>Longitude: {location.longitude.toFixed(6)}</p>
-                  {distance !== null && (
-                    <p className="font-medium">
-                      Distance from workshop: {Math.round(distance)}m
-                      {distance > 100 && <span className="text-red-600"> (Too far!)</span>}
-                    </p>
-                  )}
+              )}
+
+              <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                  <div className="text-sm text-blue-800 dark:text-blue-300">
+                    <strong>Location Verification Required:</strong> Please enable location services
+                    and ensure you are at the workshop location (within 100m) to record attendance.
+                  </div>
                 </div>
               </div>
 
-              {/* Map Mock */}
-              <div className="bg-gray-200 border-2 border-gray-300 rounded-lg h-64 flex items-center justify-center mb-4">
-                <div className="text-center">
-                  <div className="text-4xl mb-2">🗺️</div>
-                  <p className="text-gray-600">Map View</p>
-                  <p className="text-sm text-gray-500">Your location and workshop location would be shown here</p>
-                </div>
+              <div>
+                <Button
+                  onClick={getCurrentLocation}
+                  disabled={isGettingLocation}
+                  className="w-full"
+                  size="lg"
+                >
+                  {isGettingLocation ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Getting Location...
+                    </>
+                  ) : (
+                    <>
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Get My Location
+                    </>
+                  )}
+                </Button>
               </div>
-            </div>
-          )}
 
-          {locationError && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <p className="text-sm text-red-800">{locationError}</p>
-            </div>
-          )}
+              {locationError && (
+                <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4">
+                  <div className="flex items-start gap-2">
+                    <XCircle className="w-5 h-5 text-destructive mt-0.5" />
+                    <p className="text-sm text-destructive">{locationError}</p>
+                  </div>
+                </div>
+              )}
 
-          <div className="flex space-x-4">
-            <Link
-              href="/talenta/courses"
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-center"
-            >
-              Cancel
-            </Link>
-            <button
-              onClick={handleSubmitAttendance}
-              disabled={!location || (distance !== null && distance > 100)}
-              className="flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Record Attendance
-            </button>
-          </div>
+              {location && (
+                <div className="space-y-4">
+                  <div
+                    className={`rounded-lg p-4 border ${
+                      distance !== null && distance <= 100
+                        ? 'bg-success/10 border-success/30'
+                        : distance !== null && distance > 100
+                        ? 'bg-destructive/10 border-destructive/30'
+                        : 'bg-muted border-border'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium">Location Captured</span>
+                      {distance !== null && distance <= 100 && (
+                        <CheckCircle2 className="w-5 h-5 text-success" />
+                      )}
+                      {distance !== null && distance > 100 && (
+                        <XCircle className="w-5 h-5 text-destructive" />
+                      )}
+                    </div>
+                    <div className="text-sm space-y-1 text-muted-foreground">
+                      <p>Latitude: {location.latitude.toFixed(6)}</p>
+                      <p>Longitude: {location.longitude.toFixed(6)}</p>
+                      {distance !== null && (
+                        <p className="font-medium text-foreground">
+                          Distance from workshop: {Math.round(distance)}m
+                          {distance > 100 && (
+                            <span className="text-destructive ml-2">(Too far! Must be within 100m)</span>
+                          )}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Map placeholder - you can integrate Google Maps or Mapbox here */}
+                  <div className="bg-muted border-2 border-border rounded-lg h-64 flex items-center justify-center">
+                    <div className="text-center">
+                      <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-muted-foreground">Map View</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Your location and workshop location would be shown here
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-4 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  asChild
+                  className="flex-1"
+                >
+                  <Link href="/talenta/my-courses">Cancel</Link>
+                </Button>
+                <Button
+                  onClick={handleSubmitAttendance}
+                  disabled={!location || (distance !== null && distance > 100) || isSubmitting}
+                  className="flex-1"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Recording...
+                    </>
+                  ) : (
+                    'Record Attendance'
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </main>
-    </div>
+      </div>
+    </AppLayout>
   );
 }
-
-
-

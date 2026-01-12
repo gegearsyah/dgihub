@@ -86,36 +86,58 @@ export default function TalentSearchPage() {
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Talent Search</h1>
+        <h1 className={`text-3xl font-bold mb-8 ${
+          isDark ? 'text-foreground' : 'text-gray-900'
+        }`}>Talent Search</h1>
 
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
+        <div className={`rounded-lg shadow p-6 mb-8 border ${
+          isDark ? 'bg-card border-border' : 'bg-white border-gray-200'
+        }`}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Skills</label>
+              <label className={`block text-sm font-medium mb-2 ${
+                isDark ? 'text-foreground' : 'text-gray-700'
+              }`}>Skills</label>
               <input
                 type="text"
                 value={filters.skills}
                 onChange={(e) => setFilters({ ...filters, skills: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className={`w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isDark
+                    ? 'bg-muted border-border text-foreground placeholder:text-muted-foreground'
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
                 placeholder="e.g., JavaScript, Python"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">SKKNI Codes</label>
+              <label className={`block text-sm font-medium mb-2 ${
+                isDark ? 'text-foreground' : 'text-gray-700'
+              }`}>SKKNI Codes</label>
               <input
                 type="text"
                 value={filters.skkniCodes}
                 onChange={(e) => setFilters({ ...filters, skkniCodes: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className={`w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isDark
+                    ? 'bg-muted border-border text-foreground placeholder:text-muted-foreground'
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
                 placeholder="e.g., IT-2023-001"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">AQRF Level</label>
+              <label className={`block text-sm font-medium mb-2 ${
+                isDark ? 'text-foreground' : 'text-gray-700'
+              }`}>AQRF Level</label>
               <select
                 value={filters.aqrfLevel}
                 onChange={(e) => setFilters({ ...filters, aqrfLevel: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className={`w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isDark
+                    ? 'bg-muted border-border text-foreground'
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
               >
                 <option value="">Any Level</option>
                 {[1, 2, 3, 4, 5, 6, 7, 8].map(level => (
@@ -124,30 +146,38 @@ export default function TalentSearchPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+              <label className={`block text-sm font-medium mb-2 ${
+                isDark ? 'text-foreground' : 'text-gray-700'
+              }`}>Location</label>
               <input
                 type="text"
                 value={filters.location}
                 onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className={`w-full px-3 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  isDark
+                    ? 'bg-muted border-border text-foreground placeholder:text-muted-foreground'
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
                 placeholder="City or Province"
               />
             </div>
           </div>
           <div className="mt-4">
-            <label className="flex items-center">
+            <label className={`flex items-center cursor-pointer ${
+              isDark ? 'text-foreground' : 'text-gray-700'
+            }`}>
               <input
                 type="checkbox"
                 checked={filters.hasCertificates}
                 onChange={(e) => setFilters({ ...filters, hasCertificates: e.target.checked })}
-                className="mr-2"
+                className="mr-2 accent-blue-600"
               />
-              <span className="text-sm text-gray-700">Has Certificates Only</span>
+              <span className="text-sm">Has Certificates Only</span>
             </label>
           </div>
           <button
             onClick={searchTalents}
-            className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             Search
           </button>
@@ -155,25 +185,47 @@ export default function TalentSearchPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {talents.map((talent) => (
-            <div key={talent.talenta_id} className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{talent.full_name}</h3>
-              <p className="text-gray-600 text-sm mb-4">{talent.city}, {talent.province}</p>
+            <div 
+              key={talent.talenta_id || talent.id || `talent-${talent.full_name}`}
+              className={`rounded-lg shadow-md p-6 border ${
+                isDark ? 'bg-card border-border' : 'bg-white border-gray-200'
+              }`}
+            >
+              <h3 className={`text-xl font-semibold mb-2 ${
+                isDark ? 'text-foreground' : 'text-gray-900'
+              }`}>{talent.full_name}</h3>
+              <p className={`text-sm mb-4 ${
+                isDark ? 'text-muted-foreground' : 'text-gray-600'
+              }`}>{talent.city}, {talent.province}</p>
               
-              <div className="space-y-2 mb-4 text-sm">
+              <div className={`space-y-2 mb-4 text-sm ${
+                isDark ? 'text-muted-foreground' : 'text-gray-600'
+              }`}>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Certificates:</span>
-                  <span className="text-gray-900 font-semibold">{talent.certificate_count}</span>
+                  <span>Certificates:</span>
+                  <span className={`font-semibold ${
+                    isDark ? 'text-foreground' : 'text-gray-900'
+                  }`}>{talent.certificate_count}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">AQRF Level:</span>
-                  <span className="text-gray-900 font-semibold">{talent.max_aqrf_level || 'N/A'}</span>
+                  <span>AQRF Level:</span>
+                  <span className={`font-semibold ${
+                    isDark ? 'text-foreground' : 'text-gray-900'
+                  }`}>{talent.max_aqrf_level || 'N/A'}</span>
                 </div>
                 {talent.skkni_codes && talent.skkni_codes.length > 0 && (
                   <div>
-                    <span className="text-gray-500">SKKNI Codes:</span>
+                    <span>SKKNI Codes:</span>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {talent.skkni_codes.slice(0, 3).map((code, idx) => (
-                        <span key={idx} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                      {talent.skkni_codes.slice(0, 3).map((code: string, idx: number) => (
+                        <span 
+                          key={`code-${idx}-${code}`}
+                          className={`px-2 py-1 text-xs rounded ${
+                            isDark
+                              ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                              : 'bg-blue-100 text-blue-800'
+                          }`}
+                        >
                           {code}
                         </span>
                       ))}
@@ -181,14 +233,16 @@ export default function TalentSearchPage() {
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Match Score:</span>
-                  <span className="text-gray-900 font-semibold">{talent.match_score || 0}/3</span>
+                  <span>Match Score:</span>
+                  <span className={`font-semibold ${
+                    isDark ? 'text-foreground' : 'text-gray-900'
+                  }`}>{talent.match_score || 0}/3</span>
                 </div>
               </div>
 
               <Link
-                href={`/industri/talenta/${talent.talenta_id}`}
-                className="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                href={`/industri/talenta/${talent.talenta_id || talent.id}`}
+                className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 View Profile
               </Link>
@@ -198,10 +252,10 @@ export default function TalentSearchPage() {
 
         {talents.length === 0 && !loading && (
           <div className="flex items-center justify-center min-h-[400px]">
-            <div className={`text-center py-12 px-8 rounded-lg shadow max-w-md mx-auto ${
-              isDark ? 'bg-[#1B263B]' : 'bg-white'
+            <div className={`text-center py-12 px-8 rounded-lg shadow max-w-md mx-auto border ${
+              isDark ? 'bg-card border-border' : 'bg-white border-gray-200'
             }`}>
-              <p className={isDark ? 'text-[#C5C6C0]' : 'text-gray-500'}>
+              <p className={isDark ? 'text-muted-foreground' : 'text-gray-500'}>
                 No talents found. Try adjusting your search filters.
               </p>
             </div>

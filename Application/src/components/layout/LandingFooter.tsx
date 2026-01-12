@@ -6,9 +6,9 @@ import Link from "next/link";
 const LandingFooter = () => {
   const footerLinks = {
     platform: [
-      { name: "Portal Pembelajar", href: "/talenta/dashboard" },
-      { name: "Portal Penyedia", href: "/mitra/dashboard" },
-      { name: "Portal Pemberi Kerja", href: "/industri/dashboard" },
+      { name: "Portal Pembelajar", href: "/dashboard" },
+      { name: "Portal Penyedia", href: "/dashboard" },
+      { name: "Portal Pemberi Kerja", href: "/dashboard" },
       { name: "API & Integrasi", href: "#" },
     ],
     resources: [

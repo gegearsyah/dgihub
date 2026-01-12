@@ -87,99 +87,178 @@ export default function MitraAnalyticsPage() {
           <>
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+              <div className={`rounded-lg p-6 border ${
+                isDark 
+                  ? 'bg-card border-border' 
+                  : 'bg-white border-gray-200 shadow-sm'
+              }`}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-400 mb-1">Total Courses</p>
-                    <p className="text-3xl font-bold text-white">{analytics.totalCourses}</p>
+                    <p className={`text-sm mb-1 ${
+                      isDark ? 'text-muted-foreground' : 'text-gray-600'
+                    }`}>Total Courses</p>
+                    <p className={`text-3xl font-bold ${
+                      isDark ? 'text-foreground' : 'text-gray-900'
+                    }`}>{analytics.totalCourses}</p>
                   </div>
-                  <div className="w-12 h-12 bg-indigo-500/20 rounded-lg flex items-center justify-center">
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                    isDark ? 'bg-indigo-500/20' : 'bg-indigo-100'
+                  }`}>
                     <span className="text-2xl">📚</span>
                   </div>
                 </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <span className="text-green-400">{analytics.publishedCourses} published</span>
-                  <span className="text-gray-500 mx-2">•</span>
-                  <span className="text-gray-400">{analytics.draftCourses} draft</span>
+                <div className={`mt-4 flex items-center text-sm ${
+                  isDark ? 'text-muted-foreground' : 'text-gray-600'
+                }`}>
+                  <span className={isDark ? 'text-green-400' : 'text-green-600'}>
+                    {analytics.publishedCourses} published
+                  </span>
+                  <span className={`mx-2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>•</span>
+                  <span className={isDark ? 'text-muted-foreground' : 'text-gray-500'}>
+                    {analytics.draftCourses} draft
+                  </span>
                 </div>
               </div>
 
-              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+              <div className={`rounded-lg p-6 border ${
+                isDark 
+                  ? 'bg-card border-border' 
+                  : 'bg-white border-gray-200 shadow-sm'
+              }`}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-400 mb-1">Total Enrollments</p>
-                    <p className="text-3xl font-bold text-white">{analytics.totalEnrollments}</p>
+                    <p className={`text-sm mb-1 ${
+                      isDark ? 'text-muted-foreground' : 'text-gray-600'
+                    }`}>Total Enrollments</p>
+                    <p className={`text-3xl font-bold ${
+                      isDark ? 'text-foreground' : 'text-gray-900'
+                    }`}>{analytics.totalEnrollments}</p>
                   </div>
-                  <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                    isDark ? 'bg-green-500/20' : 'bg-green-100'
+                  }`}>
                     <span className="text-2xl">👥</span>
                   </div>
                 </div>
-                <div className="mt-4 text-sm text-gray-400">
+                <div className={`mt-4 text-sm ${
+                  isDark ? 'text-muted-foreground' : 'text-gray-600'
+                }`}>
                   Avg: {analytics.avgEnrollments} per course
                 </div>
               </div>
 
-              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+              <div className={`rounded-lg p-6 border ${
+                isDark 
+                  ? 'bg-card border-border' 
+                  : 'bg-white border-gray-200 shadow-sm'
+              }`}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-400 mb-1">Total Materials</p>
-                    <p className="text-3xl font-bold text-white">{analytics.totalMaterials}</p>
+                    <p className={`text-sm mb-1 ${
+                      isDark ? 'text-muted-foreground' : 'text-gray-600'
+                    }`}>Total Materials</p>
+                    <p className={`text-3xl font-bold ${
+                      isDark ? 'text-foreground' : 'text-gray-900'
+                    }`}>{analytics.totalMaterials}</p>
                   </div>
-                  <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                    isDark ? 'bg-blue-500/20' : 'bg-blue-100'
+                  }`}>
                     <span className="text-2xl">📄</span>
                   </div>
                 </div>
-                <div className="mt-4 text-sm text-gray-400">
+                <div className={`mt-4 text-sm ${
+                  isDark ? 'text-muted-foreground' : 'text-gray-600'
+                }`}>
                   Learning resources
                 </div>
               </div>
 
-              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
+              <div className={`rounded-lg p-6 border ${
+                isDark 
+                  ? 'bg-card border-border' 
+                  : 'bg-white border-gray-200 shadow-sm'
+              }`}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-400 mb-1">Estimated Revenue</p>
-                    <p className="text-3xl font-bold text-white">
+                    <p className={`text-sm mb-1 ${
+                      isDark ? 'text-muted-foreground' : 'text-gray-600'
+                    }`}>Estimated Revenue</p>
+                    <p className={`text-3xl font-bold ${
+                      isDark ? 'text-foreground' : 'text-gray-900'
+                    }`}>
                       Rp {analytics.totalRevenue.toLocaleString('id-ID')}
                     </p>
                   </div>
-                  <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                    isDark ? 'bg-yellow-500/20' : 'bg-yellow-100'
+                  }`}>
                     <span className="text-2xl">💰</span>
                   </div>
                 </div>
-                <div className="mt-4 text-sm text-gray-400">
+                <div className={`mt-4 text-sm ${
+                  isDark ? 'text-muted-foreground' : 'text-gray-600'
+                }`}>
                   From enrollments
                 </div>
               </div>
             </div>
 
             {/* Top Courses */}
-            <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Top Performing Courses</h2>
+            <div className={`rounded-lg p-6 border ${
+              isDark 
+                ? 'bg-card border-border' 
+                : 'bg-white border-gray-200 shadow-sm'
+            }`}>
+              <h2 className={`text-xl font-semibold mb-4 ${
+                isDark ? 'text-foreground' : 'text-gray-900'
+              }`}>Top Performing Courses</h2>
               <div className="space-y-4">
                 {analytics.courses.length === 0 ? (
                   <div className="flex items-center justify-center py-12">
-                    <p className="text-gray-400 text-center">No courses yet</p>
+                    <p className={isDark ? 'text-muted-foreground' : 'text-gray-500'}>
+                      No courses yet
+                    </p>
                   </div>
                 ) : (
                   analytics.courses.map((course: any) => (
-                    <div key={course.kursus_id} className="flex items-center justify-between p-4 bg-gray-900/50 rounded-lg">
+                    <div 
+                      key={course.kursus_id || course.id || `course-${course.title}`}
+                      className={`flex items-center justify-between p-4 rounded-lg border ${
+                        isDark 
+                          ? 'bg-muted/50 border-border' 
+                          : 'bg-gray-50 border-gray-200'
+                      }`}
+                    >
                       <div className="flex-1">
-                        <h3 className="font-medium text-white">{course.title}</h3>
-                        <p className="text-sm text-gray-400 mt-1">
+                        <h3 className={`font-medium ${
+                          isDark ? 'text-foreground' : 'text-gray-900'
+                        }`}>{course.title}</h3>
+                        <p className={`text-sm mt-1 ${
+                          isDark ? 'text-muted-foreground' : 'text-gray-600'
+                        }`}>
                           {course.enrollment_count || 0} enrollments • {course.material_count || 0} materials
                         </p>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className={`px-3 py-1 text-xs rounded-full ${
+                        <span className={`px-3 py-1 text-xs rounded-full border ${
                           course.status === 'PUBLISHED' 
-                            ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                            : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+                            ? isDark
+                              ? 'bg-green-500/20 text-green-400 border-green-500/30'
+                              : 'bg-green-100 text-green-700 border-green-300'
+                            : isDark
+                              ? 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                              : 'bg-gray-100 text-gray-600 border-gray-300'
                         }`}>
                           {course.status}
                         </span>
                         <Link
-                          href={`/mitra/courses/${course.kursus_id}/participants`}
-                          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm"
+                          href={`/mitra/courses/${course.kursus_id || course.id}/participants`}
+                          className={`px-4 py-2 rounded-lg text-sm transition-colors ${
+                            isDark
+                              ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                              : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                          }`}
                         >
                           View Details
                         </Link>

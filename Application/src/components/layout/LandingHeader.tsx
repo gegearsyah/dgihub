@@ -4,11 +4,24 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 import LanguageToggle from "@/components/LanguageToggle";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const LandingHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
+  const router = useRouter();
+
+  const getDashboardPath = () => {
+    return '/dashboard';
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
 
   const navigation = [
     { name: "Beranda", href: "#" },
@@ -48,12 +61,28 @@ const LandingHeader = () => {
         <div className="hidden md:flex items-center gap-3">
           <LanguageToggle />
           <ThemeToggle />
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/login">Masuk</Link>
-          </Button>
-          <Button asChild size="sm">
-            <Link href="/register">Daftar</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Button asChild variant="ghost" size="sm">
+                <Link href={getDashboardPath()}>Dashboard</Link>
+              </Button>
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/profile">Profil</Link>
+              </Button>
+              <Button onClick={handleLogout} variant="outline" size="sm">
+                Keluar
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/login">Masuk</Link>
+              </Button>
+              <Button asChild size="sm">
+                <Link href="/register">Daftar</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -84,12 +113,28 @@ const LandingHeader = () => {
                 <LanguageToggle />
                 <ThemeToggle />
               </div>
-              <Button asChild variant="outline" className="w-full">
-                <Link href="/login">Masuk</Link>
-              </Button>
-              <Button asChild className="w-full">
-                <Link href="/register">Daftar</Link>
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href={getDashboardPath()}>Dashboard</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href="/profile">Profil</Link>
+                  </Button>
+                  <Button onClick={handleLogout} variant="outline" className="w-full">
+                    Keluar
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href="/login">Masuk</Link>
+                  </Button>
+                  <Button asChild className="w-full">
+                    <Link href="/register">Daftar</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </nav>
         </div>
