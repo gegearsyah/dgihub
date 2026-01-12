@@ -130,7 +130,7 @@ export default function ApplicantsPage() {
           <div className="space-y-4">
             {applicants.map((applicant) => (
               <div 
-                key={applicant.pelamar_id || applicant.id || `applicant-${applicant.full_name}`}
+                key={applicant.pelamar_id || `applicant-${applicant.full_name}`}
                 className={`rounded-lg shadow-md p-6 border ${
                   isDark ? 'bg-card border-border' : 'bg-white border-gray-200'
                 }`}
@@ -237,14 +237,14 @@ export default function ApplicantsPage() {
 
                 <div className="flex space-x-2">
                   <Link
-                    href={`/industri/talenta/${applicant.talenta_id || applicant.id}`}
+                    href={`/industri/talenta/${applicant.talenta_id}`}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm transition-colors"
                   >
                     View Full Profile
                   </Link>
                   {applicant.status === 'PENDING' && (
                     <button
-                      onClick={() => setSelectedApplicant(applicant.pelamar_id || applicant.id)}
+                      onClick={() => setSelectedApplicant(applicant.pelamar_id)}
                       className={`px-4 py-2 rounded-lg text-sm border transition-colors ${
                         isDark
                           ? 'border-blue-500 text-blue-400 hover:bg-blue-500/20'
@@ -256,7 +256,7 @@ export default function ApplicantsPage() {
                   )}
                 </div>
 
-                {selectedApplicant === (applicant.pelamar_id || applicant.id) && (
+                {selectedApplicant === applicant.pelamar_id && (
                   <div className={`mt-4 p-4 rounded-lg border ${
                     isDark ? 'bg-muted/50 border-border' : 'bg-gray-50 border-gray-200'
                   }`}>
@@ -301,12 +301,12 @@ export default function ApplicantsPage() {
                       <div className="flex items-center">
                         <input
                           type="checkbox"
-                          id={`save-${applicant.pelamar_id || applicant.id}`}
+                          id={`save-${applicant.pelamar_id}`}
                           checked={decisionForm.saveToTalentPool}
                           onChange={(e) => setDecisionForm({ ...decisionForm, saveToTalentPool: e.target.checked })}
                           className="mr-2 accent-blue-600"
                         />
-                        <label htmlFor={`save-${applicant.pelamar_id || applicant.id}`} className={`text-sm ${
+                        <label htmlFor={`save-${applicant.pelamar_id}`} className={`text-sm ${
                           isDark ? 'text-foreground' : 'text-gray-700'
                         }`}>
                           Save to Talent Pool (if rejected)
@@ -314,7 +314,7 @@ export default function ApplicantsPage() {
                       </div>
                       <div className="flex space-x-2">
                         <button
-                          onClick={() => handleDecision(applicant.pelamar_id || applicant.id)}
+                          onClick={() => handleDecision(applicant.pelamar_id)}
                           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm transition-colors"
                         >
                           Submit Decision

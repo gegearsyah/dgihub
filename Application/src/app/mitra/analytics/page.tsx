@@ -223,7 +223,7 @@ export default function MitraAnalyticsPage() {
                 ) : (
                   analytics.courses.map((course: any) => (
                     <div 
-                      key={course.kursus_id || course.id || `course-${course.title}`}
+                      key={course.kursus_id || `course-${course.title}`}
                       className={`flex items-center justify-between p-4 rounded-lg border ${
                         isDark 
                           ? 'bg-muted/50 border-border' 
@@ -253,7 +253,7 @@ export default function MitraAnalyticsPage() {
                           {course.status}
                         </span>
                         <Link
-                          href={`/mitra/courses/${course.kursus_id || course.id}/participants`}
+                          href={`/mitra/courses/${course.kursus_id}/participants`}
                           className={`px-4 py-2 rounded-lg text-sm transition-colors ${
                             isDark
                               ? 'bg-indigo-600 hover:bg-indigo-700 text-white'

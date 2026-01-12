@@ -159,7 +159,7 @@ export default function TalentPoolPage() {
           ) : (
             talentPool.map((talent: any) => (
               <div 
-                key={talent.talenta_id || talent.id || `talent-${talent.full_name}`}
+                key={talent.talenta_id || `talent-${talent.full_name}`}
                 className={`rounded-lg p-6 border ${
                   isDark ? 'bg-card border-border' : 'bg-white border-gray-200 shadow-sm'
                 }`}
@@ -224,7 +224,7 @@ export default function TalentPoolPage() {
 
                 <div className="flex gap-2">
                   <Link
-                    href={`/industri/talenta/${talent.talenta_id || talent.id}`}
+                    href={`/industri/talenta/${talent.talenta_id}`}
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
                   >
                     View Profile

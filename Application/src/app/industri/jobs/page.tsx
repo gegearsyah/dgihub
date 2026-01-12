@@ -241,7 +241,7 @@ export default function JobsPage() {
             </div>
           ) : (
             jobs.map((job, index) => (
-              <div key={job.lowongan_id || job.id || `job-${index}`} className="rounded-lg shadow-md p-6 bg-card border border-border">
+              <div key={job.lowongan_id || `job-${index}`} className="rounded-lg shadow-md p-6 bg-card border border-border">
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="text-xl font-semibold mb-1 text-foreground">

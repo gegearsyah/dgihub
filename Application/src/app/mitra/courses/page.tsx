@@ -192,7 +192,7 @@ export default function MitraCoursesPage() {
             </div>
           ) : (
             courses.map((course: any, index: number) => (
-              <div key={course.kursus_id || course.id || `course-${index}`} className="bg-card border border-border rounded-lg shadow-sm p-6">
+              <div key={course.kursus_id || `course-${index}`} className="bg-card border border-border rounded-lg shadow-sm p-6">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-xl font-semibold text-foreground">{course.title}</h3>
                   <span className={`px-2 py-1 text-xs rounded ${
