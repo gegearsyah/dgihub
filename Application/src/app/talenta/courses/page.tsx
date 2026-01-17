@@ -125,7 +125,7 @@ export default function CoursesPage() {
         fetchCourses();
       } else {
         console.error('Enrollment failed:', response);
-        showError(response.message || response.error || 'Payment failed');
+        showError(response.message || (response.errors && response.errors[0]) || 'Payment failed');
       }
     } catch (error: any) {
       console.error('Enrollment error:', error);
