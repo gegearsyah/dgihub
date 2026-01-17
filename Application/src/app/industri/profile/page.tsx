@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Building2, FileText, Award, Users, MapPin, Phone, Mail, Globe, 
   Banknote, User, CheckCircle2, XCircle, Clock, Upload, Download,
-  Shield, Certificate, Briefcase, Factory
+  Briefcase
 } from 'lucide-react';
 
 export default function IndustriProfilePage() {

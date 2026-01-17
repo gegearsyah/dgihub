@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Building2, FileText, Award, Users, MapPin, Phone, Mail, Globe, 
   Banknote, User, CheckCircle2, XCircle, Clock, Upload, Download,
-  Shield, Certificate, FileCheck, Building
+  FileCheck, Building
 } from 'lucide-react';
 
 export default function MitraProfilePage() {
