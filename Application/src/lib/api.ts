@@ -169,13 +169,17 @@ class ApiClient {
     if (filters?.search) params.append('search', filters.search);
     if (filters?.skkniCode) params.append('skkniCode', filters.skkniCode);
     if (filters?.aqrfLevel) params.append('aqrfLevel', filters.aqrfLevel);
-    return this.request(`/talenta/learning-hub?${params.toString()}`);
+    return this.request(`/talenta/courses?${params.toString()}`);
   }
 
-  async enrollInCourse(kursusId: string) {
+  async enrollInCourse(kursusId: string, paymentMethod?: string, paymentData?: any) {
     return this.request('/talenta/enroll', {
       method: 'POST',
-      body: JSON.stringify({ kursusId }),
+      body: JSON.stringify({ 
+        kursusId,
+        paymentMethod,
+        paymentData
+      }),
     });
   }
 

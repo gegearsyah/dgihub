@@ -5,16 +5,47 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { mockParticipants } from '@/lib/mockData';
+import { useToast } from '@/contexts/ToastContext';
+import { apiClient } from '@/lib/api';
 
 export default function ParticipantsPage() {
   const { isAuthenticated, user } = useAuth();
   const { theme } = useTheme();
+  const { error: showError } = useToast();
   const router = useRouter();
   const params = useParams();
   const courseId = params?.id as string;
-  const [participants, setParticipants] = useState(mockParticipants);
+  const [participants, setParticipants] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const isDark = theme === 'dark';
+
+  useEffect(() => {
+    if (!isAuthenticated || user?.userType !== 'MITRA') {
+      router.push('/login');
+      return;
+    }
+
+    if (courseId) {
+      loadParticipants();
+    }
+  }, [isAuthenticated, user, courseId, router]);
+
+  const loadParticipants = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.getCourseParticipants(courseId);
+      if (response.success && response.data) {
+        setParticipants(Array.isArray(response.data) ? response.data : []);
+      } else {
+        showError(response.message || 'Failed to load participants');
+      }
+    } catch (error) {
+      console.error('Failed to load participants:', error);
+      showError('Failed to load participants');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-background' : 'bg-gray-50'}`}>
@@ -42,6 +73,25 @@ export default function ParticipantsPage() {
           </p>
         </div>
 
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
+                isDark ? 'border-[#0EB0F9]' : 'border-[#0EB0F9]'
+              } mx-auto`}></div>
+              <p className="mt-4 text-muted-foreground">Loading participants...</p>
+            </div>
+          </div>
+        ) : participants.length === 0 ? (
+          <div className={`rounded-lg shadow-md p-8 text-center ${
+            isDark ? 'bg-card border border-border' : 'bg-white border border-gray-200'
+          }`}>
+            <p className={isDark ? 'text-muted-foreground' : 'text-gray-600'}>
+              No participants enrolled in this course yet.
+            </p>
+          </div>
+        ) : (
+
         <div className={`rounded-lg shadow-md overflow-hidden border ${
           isDark ? 'bg-card border-border' : 'bg-white border-gray-200'
         }`}>
@@ -60,7 +110,11 @@ export default function ParticipantsPage() {
                 }`}>
                   Export CSV
                 </button>
-                <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors">
+                <button className={`px-4 py-2 rounded-lg text-sm transition-colors ${
+                  isDark 
+                    ? 'bg-[#0EB0F9] text-white hover:bg-[#0A9DE6]' 
+                    : 'bg-[#0EB0F9] text-white hover:bg-[#0A9DE6]'
+                }`}>
                   Send Message
                 </button>
               </div>
@@ -132,7 +186,9 @@ export default function ParticipantsPage() {
                           isDark ? 'bg-muted' : 'bg-gray-200'
                         }`}>
                           <div
-                            className="bg-indigo-600 h-2 rounded-full"
+                            className={`h-2 rounded-full ${
+                              isDark ? 'bg-[#0EB0F9]' : 'bg-[#0EB0F9]'
+                            }`}
                             style={{ width: `${participant.progress}%` }}
                           ></div>
                         </div>
@@ -148,14 +204,14 @@ export default function ParticipantsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 text-xs rounded-full ${
-                        participant.status === 'ACTIVE' 
+                        participant.status === 'ENROLLED' 
                           ? isDark
-                            ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                            : 'bg-green-100 text-green-800'
+                            ? 'bg-[#0EB0F9]/20 text-[#3BC0FF] border border-[#0EB0F9]/30'
+                            : 'bg-[#0EB0F9]/10 text-[#0878B3] border border-[#0EB0F9]/30'
                           : participant.status === 'COMPLETED'
                             ? isDark
-                              ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                              : 'bg-blue-100 text-blue-800'
+                              ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                              : 'bg-green-100 text-green-800'
                             : isDark
                               ? 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
                               : 'bg-gray-100 text-gray-800'
@@ -164,11 +220,13 @@ export default function ParticipantsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-indigo-600 hover:text-indigo-900 mr-4">
+                      <button className={`mr-4 ${
+                        isDark ? 'text-[#0EB0F9] hover:text-[#3BC0FF]' : 'text-[#0EB0F9] hover:text-[#0A9DE6]'
+                      }`}>
                         View Details
                       </button>
                       {participant.progress >= 100 && (
-                        <button className="text-green-600 hover:text-green-900">
+                        <button className={isDark ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-700'}>
                           Issue Certificate
                         </button>
                       )}
@@ -179,6 +237,7 @@ export default function ParticipantsPage() {
             </table>
           </div>
         </div>
+        )}
       </main>
     </div>
   );

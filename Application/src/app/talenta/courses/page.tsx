@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useToast } from '@/contexts/ToastContext';
 import { apiClient } from '@/lib/api';
 import AppLayout from '@/components/AppLayout';
+import PaymentModal from '@/components/PaymentModal';
 
 interface Course {
   kursus_id: string;
@@ -24,6 +26,7 @@ interface Course {
 export default function CoursesPage() {
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { theme } = useTheme();
+  const { success, error: showError } = useToast();
   const router = useRouter();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +35,17 @@ export default function CoursesPage() {
     skkniCode: '',
     aqrfLevel: '',
     provider: ''
+  });
+  const [paymentModal, setPaymentModal] = useState<{
+    isOpen: boolean;
+    courseId: string;
+    courseTitle: string;
+    amount: number;
+  }>({
+    isOpen: false,
+    courseId: '',
+    courseTitle: '',
+    amount: 0
   });
   const isDark = theme === 'dark';
 
@@ -55,30 +69,67 @@ export default function CoursesPage() {
         skkniCode: filters.skkniCode || undefined,
         aqrfLevel: filters.aqrfLevel || undefined,
       });
+      console.log('Courses API response:', response); // Debug log
       if (response.success && response.data) {
         const data = response.data as any;
-        const coursesData = data?.courses || data;
+        // API returns { courses: [...], pagination: {...} }
+        const coursesData = data?.courses || (Array.isArray(data) ? data : []);
+        console.log('Courses data:', coursesData); // Debug log
         setCourses(Array.isArray(coursesData) ? coursesData : []);
+      } else {
+        console.error('Courses API error:', response.message);
+        setCourses([]);
       }
     } catch (error) {
       console.error('Failed to fetch courses:', error);
+      setCourses([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleEnroll = async (kursusId: string) => {
-    try {
-      const response = await apiClient.enrollInCourse(kursusId);
+  const handleEnroll = async (kursusId: string, courseTitle: string, coursePrice: number) => {
+    // If course is free, enroll directly
+    if (coursePrice === 0) {
+      try {
+        const response = await apiClient.enrollInCourse(kursusId);
+        if (response.success) {
+          success('Successfully enrolled!');
+          fetchCourses();
+        } else {
+          showError(response.message || 'Failed to enroll');
+        }
+      } catch (error) {
+        showError('Failed to enroll in course');
+      }
+    } else {
+      // Show payment modal for paid courses
+      setPaymentModal({
+        isOpen: true,
+        courseId: kursusId,
+        courseTitle,
+        amount: coursePrice
+      });
+    }
+  };
 
+  const handlePaymentSuccess = async (paymentMethod: string, paymentData: any) => {
+    try {
+      console.log('Processing enrollment with payment:', { courseId: paymentModal.courseId, paymentMethod, paymentData });
+      const response = await apiClient.enrollInCourse(paymentModal.courseId, paymentMethod, paymentData);
+      console.log('Enrollment response:', response);
+      
       if (response.success) {
-        alert('Successfully enrolled!');
+        setPaymentModal({ isOpen: false, courseId: '', courseTitle: '', amount: 0 });
+        success('Payment successful! You are now enrolled in the course.');
         fetchCourses();
       } else {
-        alert(response.message || 'Failed to enroll');
+        console.error('Enrollment failed:', response);
+        showError(response.message || response.error || 'Payment failed');
       }
-    } catch (error) {
-      alert('Failed to enroll in course');
+    } catch (error: any) {
+      console.error('Enrollment error:', error);
+      showError(error.message || 'Failed to process enrollment');
     }
   };
 
@@ -239,17 +290,25 @@ export default function CoursesPage() {
 
                 {course.is_enrolled ? (
                   <Link
-                    href={`/talenta/courses/${course.kursus_id}`}
-                    className="block w-full text-center px-4 py-2 bg-[#0EB0F9] text-white rounded-lg hover:bg-[#0A9DE6] transition-colors touch-target"
+                    href={`/talenta/courses/${course.kursus_id}/learn`}
+                    className={`block w-full text-center px-4 py-2 rounded-lg transition-colors ${
+                      isDark
+                        ? 'bg-[#0EB0F9] text-white hover:bg-[#3BC0FF]'
+                        : 'bg-[#0EB0F9] text-white hover:bg-[#0A9DE6]'
+                    }`}
                   >
                     Continue Learning
                   </Link>
                 ) : (
                   <button
-                    onClick={() => handleEnroll(course.kursus_id)}
-                    className="w-full px-4 py-2 bg-[#0EB0F9] text-white rounded-lg hover:bg-[#0A9DE6] transition-colors touch-target"
+                    onClick={() => handleEnroll(course.kursus_id, course.title, course.price)}
+                    className={`w-full px-4 py-2 rounded-lg transition-colors ${
+                      isDark
+                        ? 'bg-[#0EB0F9] text-white hover:bg-[#3BC0FF]'
+                        : 'bg-[#0EB0F9] text-white hover:bg-[#0A9DE6]'
+                    }`}
                   >
-                    Enroll Now
+                    {course.price > 0 ? 'Enroll Now' : 'Enroll Free'}
                   </button>
                 )}
               </div>
@@ -269,6 +328,15 @@ export default function CoursesPage() {
           </div>
         )}
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={paymentModal.isOpen}
+        onClose={() => setPaymentModal({ isOpen: false, courseId: '', courseTitle: '', amount: 0 })}
+        courseTitle={paymentModal.courseTitle}
+        amount={paymentModal.amount}
+        onPaymentSuccess={handlePaymentSuccess}
+      />
     </AppLayout>
   );
 }

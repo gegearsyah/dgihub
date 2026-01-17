@@ -39,13 +39,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Build query
+    // Get talenta profile_id for enrollment check
+    const { data: talentaProfile } = await supabaseAdmin
+      .from('talenta_profiles')
+      .select('profile_id')
+      .eq('user_id', user.userId)
+      .single();
+
+    const talentaProfileId = talentaProfile?.profile_id;
+
+    // Build query - use left join instead of inner to show courses even if mitra_profiles is missing
+    // Note: We'll check enrollment status separately to avoid ambiguous joins
     let query = supabaseAdmin
       .from('kursus')
       .select(`
         *,
-        mitra_profiles!inner(organization_name, profile_id),
-        enrollments!left(enrollment_id, status)
+        mitra_profiles!left(organization_name, profile_id)
       `)
       .eq('status', 'PUBLISHED')
       .range(offset, offset + limit - 1);
@@ -82,10 +91,25 @@ export async function GET(request: NextRequest) {
       .select('*', { count: 'exact', head: true })
       .eq('status', 'PUBLISHED');
 
+    // Get enrollment status for all courses if talenta profile exists
+    let enrollmentMap = new Map<string, boolean>();
+    if (talentaProfileId) {
+      const { data: enrollments } = await supabaseAdmin
+        .from('enrollments')
+        .select('kursus_id, status')
+        .eq('talenta_id', talentaProfileId);
+      
+      if (enrollments) {
+        enrollments.forEach((enrollment: any) => {
+          enrollmentMap.set(enrollment.kursus_id, enrollment.status === 'ENROLLED' || enrollment.status === 'COMPLETED');
+        });
+      }
+    }
+
     // Transform courses to include provider name and enrollment status
     const transformedCourses = courses?.map((course: any) => {
       const providerName = course.mitra_profiles?.organization_name || 'Unknown Provider';
-      const isEnrolled = course.enrollments && course.enrollments.length > 0;
+      const isEnrolled = talentaProfileId ? enrollmentMap.get(course.kursus_id) || false : false;
       
       return {
         kursus_id: course.kursus_id,

@@ -36,7 +36,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Plus, Edit, Trash2, Eye, CheckCircle2, XCircle, Globe, MapPin, Users } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, CheckCircle2, XCircle, Globe, MapPin, Users, Send, EyeOff } from 'lucide-react';
 
 export default function MitraCoursesPage() {
   const { isAuthenticated, loading: authLoading, user } = useAuth();
@@ -200,6 +200,26 @@ export default function MitraCoursesPage() {
     } catch (error) {
       console.error('Failed to delete course:', error);
       showError('Failed to delete course');
+    }
+  };
+
+  const handleTogglePublish = async (course: any) => {
+    try {
+      const newStatus = course.status === 'PUBLISHED' ? 'DRAFT' : 'PUBLISHED';
+      const response = await apiClient.updateCourse(course.kursus_id, {
+        ...course,
+        status: newStatus
+      });
+
+      if (response.success) {
+        success(`Course ${newStatus === 'PUBLISHED' ? 'published' : 'unpublished'} successfully!`);
+        loadCourses();
+      } else {
+        showError(response.message || `Failed to ${newStatus === 'PUBLISHED' ? 'publish' : 'unpublish'} course`);
+      }
+    } catch (error) {
+      console.error('Failed to toggle publish status:', error);
+      showError('Failed to update course status');
     }
   };
 
@@ -467,6 +487,23 @@ export default function MitraCoursesPage() {
                     <Button
                       variant="ghost"
                       size="icon"
+                      onClick={() => handleTogglePublish(course)}
+                      className={`h-8 w-8 ${
+                        course.status === 'PUBLISHED' 
+                          ? 'text-orange-600 hover:text-orange-700' 
+                          : 'text-[#0EB0F9] hover:text-[#0A9DE6]'
+                      }`}
+                      title={course.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}
+                    >
+                      {course.status === 'PUBLISHED' ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Send className="w-4 h-4" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => handleEdit(course)}
                       className="h-8 w-8"
                     >
@@ -558,3 +595,4 @@ export default function MitraCoursesPage() {
     </AppLayout>
   );
 }
+
