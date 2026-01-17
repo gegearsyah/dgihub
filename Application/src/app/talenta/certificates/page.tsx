@@ -61,8 +61,8 @@ export default function CertificatesPage() {
     return (
       <AppLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
-            isDark ? 'border-[#2D6A4F]' : 'border-[#2D6A4F]'
+          <div           className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
+            isDark ? 'border-[#0EB0F9]' : 'border-[#0EB0F9]'
           }`}></div>
         </div>
       </AppLayout>
@@ -131,7 +131,7 @@ export default function CertificatesPage() {
               </p>
               <Link
                 href="/talenta/courses"
-                className="inline-block px-6 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
+                className="inline-block px-6 py-2 bg-[#0EB0F9] text-white rounded-lg hover:bg-[#0A9DE6] transition-colors touch-target"
               >
                 Browse Courses
               </Link>

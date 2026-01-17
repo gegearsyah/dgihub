@@ -63,7 +63,7 @@ export default function TalentPoolPage() {
       <AppLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
-            isDark ? 'border-[#2D6A4F]' : 'border-[#2D6A4F]'
+            isDark ? 'border-[#0EB0F9]' : 'border-[#0EB0F9]'
           }`}></div>
         </div>
       </AppLayout>

@@ -90,9 +90,9 @@ export default function MyCoursesPage() {
                   </h3>
                   <span className={`px-2 py-1 text-xs rounded ${
                     enrollment.status === 'COMPLETED'
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                      ? 'bg-[#0EB0F9]/10 text-[#0878B3] dark:bg-[#0EB0F9]/20 dark:text-[#3BC0FF]'
                       : enrollment.status === 'ACTIVE'
-                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                      ? 'bg-[#0EB0F9]/10 text-[#0878B3] dark:bg-[#0EB0F9]/20 dark:text-[#3BC0FF]'
                       : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'
                   }`}>
                     {enrollment.status}

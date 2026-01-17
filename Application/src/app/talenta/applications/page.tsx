@@ -43,7 +43,7 @@ export default function ApplicationsPage() {
       <AppLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
-            isDark ? 'border-[#2D6A4F]' : 'border-[#2D6A4F]'
+            isDark ? 'border-[#0EB0F9]' : 'border-[#0EB0F9]'
           }`}></div>
         </div>
       </AppLayout>
@@ -78,7 +78,7 @@ export default function ApplicationsPage() {
               </p>
               <Link
                 href="/talenta/jobs"
-                className="inline-block px-6 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
+                className="inline-block px-6 py-2 bg-[#0EB0F9] text-white rounded-lg hover:bg-[#0A9DE6] transition-colors touch-target"
               >
                 Browse Available Jobs
               </Link>
@@ -114,8 +114,8 @@ export default function ApplicationsPage() {
                           : 'bg-yellow-100 text-yellow-800'
                         : application.status === 'ACCEPTED'
                         ? isDark
-                          ? 'bg-[#2D6A4F]/20 text-[#2D6A4F]'
-                          : 'bg-green-100 text-green-800'
+                          ? 'bg-[#0EB0F9]/20 text-[#0EB0F9]'
+                          : 'bg-[#0EB0F9]/10 text-[#0878B3]'
                         : application.status === 'REJECTED'
                         ? isDark
                           ? 'bg-red-500/20 text-red-400'
@@ -130,8 +130,8 @@ export default function ApplicationsPage() {
                       <span className={`px-3 py-1 text-sm rounded-full ${
                         application.hiring_decision === 'ACCEPT'
                           ? isDark
-                            ? 'bg-[#2D6A4F]/20 text-[#2D6A4F]'
-                            : 'bg-green-100 text-green-800'
+                            ? 'bg-[#0EB0F9]/20 text-[#0EB0F9]'
+                            : 'bg-[#0EB0F9]/10 text-[#0878B3]'
                           : isDark
                           ? 'bg-red-500/20 text-red-400'
                           : 'bg-red-100 text-red-800'
@@ -206,7 +206,7 @@ export default function ApplicationsPage() {
                 <div className="flex space-x-2">
                   <Link
                     href={`/industri/jobs/${application.lowongan_id}`}
-                    className="px-4 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target text-sm"
+                    className="px-4 py-2 bg-[#0EB0F9] text-white rounded-lg hover:bg-[#0A9DE6] transition-colors touch-target text-sm"
                   >
                     View Job Details
                   </Link>

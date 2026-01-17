@@ -56,8 +56,8 @@ export default function RecommendationsPage() {
     return (
       <AppLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
-            isDark ? 'border-[#2D6A4F]' : 'border-[#2D6A4F]'
+          <div           className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
+            isDark ? 'border-[#0EB0F9]' : 'border-[#0EB0F9]'
           }`}></div>
         </div>
       </AppLayout>
@@ -89,7 +89,7 @@ export default function RecommendationsPage() {
             </p>
             <Link
               href="/talenta/courses"
-              className="inline-block px-6 py-2 bg-[#2D6A4F] hover:bg-[#2D6A4F]/80 text-white rounded-lg transition-colors touch-target"
+              className="inline-block px-6 py-2 bg-[#0EB0F9] hover:bg-[#0A9DE6] text-white rounded-lg transition-colors touch-target"
             >
               Browse All Courses
             </Link>
@@ -99,8 +99,8 @@ export default function RecommendationsPage() {
             {recommendations.map((course: any) => (
               <div key={course.kursus_id} className={`rounded-lg overflow-hidden transition-colors ${
                 isDark
-                  ? 'bg-[#1B263B] border border-[#415A77] hover:border-[#2D6A4F]'
-                  : 'bg-white border border-gray-200 hover:border-[#2D6A4F]'
+                  ? 'bg-[#1B263B] border border-[#415A77] hover:border-[#0EB0F9]'
+                  : 'bg-white border border-gray-200 hover:border-[#0EB0F9]'
               }`}>
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-3">
@@ -112,8 +112,8 @@ export default function RecommendationsPage() {
                     {course.skkni_code && (
                       <span className={`px-2 py-1 rounded text-xs border whitespace-nowrap ml-2 ${
                         isDark
-                          ? 'bg-[#2D6A4F]/20 text-[#2D6A4F] border-[#2D6A4F]/30'
-                          : 'bg-[#2D6A4F]/10 text-[#2D6A4F] border-[#2D6A4F]/30'
+                          ? 'bg-[#0EB0F9]/20 text-[#3BC0FF] border-[#0EB0F9]/30'
+                          : 'bg-[#0EB0F9]/10 text-[#0878B3] border-[#0EB0F9]/30'
                       }`}>
                         SKKNI
                       </span>
@@ -149,7 +149,7 @@ export default function RecommendationsPage() {
                     </span>
                     <Link
                       href={`/talenta/courses/${course.kursus_id}`}
-                      className="px-4 py-2 bg-[#2D6A4F] hover:bg-[#2D6A4F]/80 text-white rounded-lg text-sm transition-colors touch-target"
+                      className="px-4 py-2 bg-[#0EB0F9] hover:bg-[#0A9DE6] text-white rounded-lg text-sm transition-colors touch-target"
                     >
                       View Details
                     </Link>

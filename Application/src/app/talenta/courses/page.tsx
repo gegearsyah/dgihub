@@ -86,7 +86,7 @@ export default function CoursesPage() {
       <AppLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
-            isDark ? 'border-[#2D6A4F]' : 'border-[#2D6A4F]'
+            isDark ? 'border-[#0EB0F9]' : 'border-[#0EB0F9]'
           }`}></div>
         </div>
       </AppLayout>
@@ -111,7 +111,7 @@ export default function CoursesPage() {
               placeholder="Search courses..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className={`w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#2D6A4F] ${
+              className={`w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#0EB0F9] ${
                 isDark
                   ? 'bg-[#0D1B2A] border border-[#415A77] text-[#E0E1DD] placeholder-[#6b7280]'
                   : 'border border-gray-300'
@@ -229,14 +229,14 @@ export default function CoursesPage() {
                 {course.is_enrolled ? (
                   <Link
                     href={`/talenta/courses/${course.kursus_id}`}
-                    className="block w-full text-center px-4 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
+                    className="block w-full text-center px-4 py-2 bg-[#0EB0F9] text-white rounded-lg hover:bg-[#0A9DE6] transition-colors touch-target"
                   >
                     Continue Learning
                   </Link>
                 ) : (
                   <button
                     onClick={() => handleEnroll(course.kursus_id)}
-                    className="w-full px-4 py-2 bg-[#2D6A4F] text-white rounded-lg hover:bg-[#2D6A4F]/80 transition-colors touch-target"
+                    className="w-full px-4 py-2 bg-[#0EB0F9] text-white rounded-lg hover:bg-[#0A9DE6] transition-colors touch-target"
                   >
                     Enroll Now
                   </button>

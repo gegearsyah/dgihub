@@ -73,7 +73,7 @@ export default function TranscriptPage() {
       <AppLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className={`animate-spin rounded-full h-12 w-12 border-b-2 ${
-            isDark ? 'border-[#2D6A4F]' : 'border-[#2D6A4F]'
+            isDark ? 'border-[#0EB0F9]' : 'border-[#0EB0F9]'
           }`}></div>
         </div>
       </AppLayout>
@@ -121,7 +121,7 @@ export default function TranscriptPage() {
                   Completed
                 </p>
                 <p className={`text-3xl font-bold ${
-                  isDark ? 'text-[#2D6A4F]' : 'text-[#2D6A4F]'
+                  isDark ? 'text-[#0EB0F9]' : 'text-[#0EB0F9]'
                 }`}>
                   {transcript.stats.completedCourses}
                 </p>
@@ -228,7 +228,7 @@ export default function TranscriptPage() {
                           isDark ? 'bg-[#0D1B2A]' : 'bg-gray-200'
                         }`}>
                           <div 
-                            className="bg-[#2D6A4F] h-2 rounded-full transition-all"
+                            className="bg-[#0EB0F9] h-2 rounded-full transition-all"
                             style={{ width: `${enrollment.progress || 0}%` }}
                           ></div>
                         </div>
@@ -241,7 +241,7 @@ export default function TranscriptPage() {
                           <span>Completed: {new Date(enrollment.completed_at).toLocaleDateString('id-ID')}</span>
                         )}
                         {enrollment.certificate_issued && (
-                          <span className={isDark ? 'text-[#2D6A4F]' : 'text-green-600'}>
+                          <span className={isDark ? 'text-[#3BC0FF]' : 'text-[#0EB0F9]'}>
                             ✓ Certificate Issued
                           </span>
                         )}

@@ -87,12 +87,12 @@ export default function ProfilePage() {
         badge: isDark ? 'bg-blue-500/20 text-blue-300' : 'bg-blue-100 text-blue-800',
       };
     } else {
-      // TALENTA
+      // TALENTA - Using professional blue for consistency
       return {
-        active: isDark ? 'border-amber-400 text-amber-300' : 'border-amber-500 text-amber-600',
+        active: isDark ? 'border-[#3BC0FF] text-[#3BC0FF]' : 'border-[#0EB0F9] text-[#0EB0F9]',
         inactive: isDark ? 'border-transparent text-muted-foreground hover:text-foreground' : 'border-transparent text-gray-500 hover:text-gray-700',
-        button: isDark ? 'bg-amber-600 hover:bg-amber-700' : 'bg-amber-600 hover:bg-amber-700',
-        badge: isDark ? 'bg-amber-500/20 text-amber-300' : 'bg-amber-100 text-amber-800',
+        button: isDark ? 'bg-[#0EB0F9] hover:bg-[#0A9DE6]' : 'bg-[#0EB0F9] hover:bg-[#0A9DE6]',
+        badge: isDark ? 'bg-[#0EB0F9]/20 text-[#3BC0FF]' : 'bg-[#0EB0F9]/10 text-[#0878B3]',
       };
     }
   };
