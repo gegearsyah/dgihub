@@ -12,6 +12,16 @@ export default function ProfilePage() {
   const { user, logout } = useAuth();
   const { theme } = useTheme();
   const router = useRouter();
+
+  // Redirect to role-specific profile pages
+  useEffect(() => {
+    if (user?.userType === 'MITRA') {
+      router.push('/mitra/profile');
+    } else if (user?.userType === 'INDUSTRI') {
+      router.push('/industri/profile');
+    }
+    // TALENTA stays on this page
+  }, [user, router]);
   const [activeTab, setActiveTab] = useState<'profile' | 'skills' | 'settings'>('profile');
   const [formData, setFormData] = useState({
     fullName: user?.fullName || '',

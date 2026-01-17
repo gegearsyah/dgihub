@@ -6,30 +6,30 @@
 
 @layer base {
   :root {
-    /* Primary - Deep Navy (Trust, Government) */
-    --primary: 220 70% 18%;
-    --primary-foreground: 45 100% 96%;
+    /* Primary - Professional Blue (#0EB0F9) - Trust, Optimistic, Professional */
+    --primary: 199 95% 52%;
+    --primary-foreground: 0 0% 100%;
     
     /* Secondary - Rich Gold (Achievement, Indonesia) */
     --secondary: 38 92% 50%;
-    --secondary-foreground: 220 70% 10%;
+    --secondary-foreground: 199 95% 10%;
     
     /* Background & Surfaces - Improved contrast for light mode */
-    --background: 220 20% 99%;
-    --foreground: 220 70% 8%;
+    --background: 199 20% 99%;
+    --foreground: 199 70% 8%;
     
     --card: 0 0% 100%;
-    --card-foreground: 220 70% 8%;
+    --card-foreground: 199 70% 8%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 220 70% 8%;
+    --popover-foreground: 199 70% 8%;
     
-    /* Muted & Accent - Better contrast */
-    --muted: 220 15% 96%;
-    --muted-foreground: 220 10% 40%;
+    /* Muted & Accent - Better contrast with new blue */
+    --muted: 199 15% 96%;
+    --muted-foreground: 199 10% 40%;
     
-    --accent: 38 92% 95%;
-    --accent-foreground: 38 92% 25%;
+    --accent: 199 95% 95%;
+    --accent-foreground: 199 95% 25%;
     
     /* States */
     --destructive: 0 72% 51%;
@@ -39,45 +39,45 @@
     --success-foreground: 0 0% 100%;
     
     --warning: 38 92% 50%;
-    --warning-foreground: 220 70% 10%;
+    --warning-foreground: 199 95% 10%;
     
-    /* Borders & Input */
-    --border: 220 20% 90%;
-    --input: 220 20% 90%;
-    --ring: 220 70% 18%;
+    /* Borders & Input - Soft blue tint */
+    --border: 199 20% 90%;
+    --input: 199 20% 90%;
+    --ring: 199 95% 52%;
     
     --radius: 0.75rem;
     
-    /* Custom Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(220 70% 18%) 0%, hsl(220 60% 28%) 100%);
+    /* Custom Gradients - Updated with new blue */
+    --gradient-primary: linear-gradient(135deg, hsl(199 95% 52%) 0%, hsl(199 85% 45%) 100%);
     --gradient-gold: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(45 95% 58%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(220 70% 18%) 0%, hsl(220 60% 25%) 50%, hsl(220 50% 35%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 20% 98%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(199 95% 52%) 0%, hsl(199 85% 45%) 50%, hsl(199 75% 40%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(199 20% 98%) 100%);
     
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(220 70% 18% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(220 70% 18% / 0.08), 0 2px 4px -2px hsl(220 70% 18% / 0.05);
-    --shadow-lg: 0 10px 15px -3px hsl(220 70% 18% / 0.1), 0 4px 6px -4px hsl(220 70% 18% / 0.05);
-    --shadow-xl: 0 20px 25px -5px hsl(220 70% 18% / 0.1), 0 8px 10px -6px hsl(220 70% 18% / 0.05);
+    /* Shadows - Updated with new blue */
+    --shadow-sm: 0 1px 2px 0 hsl(199 95% 52% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(199 95% 52% / 0.08), 0 2px 4px -2px hsl(199 95% 52% / 0.05);
+    --shadow-lg: 0 10px 15px -3px hsl(199 95% 52% / 0.1), 0 4px 6px -4px hsl(199 95% 52% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(199 95% 52% / 0.1), 0 8px 10px -6px hsl(199 95% 52% / 0.05);
     --shadow-gold: 0 4px 14px 0 hsl(38 92% 50% / 0.35);
     
-    /* Sidebar */
-    --sidebar-background: 220 70% 18%;
-    --sidebar-foreground: 220 20% 95%;
+    /* Sidebar - Updated with new blue */
+    --sidebar-background: 199 95% 52%;
+    --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 38 92% 50%;
-    --sidebar-primary-foreground: 220 70% 10%;
-    --sidebar-accent: 220 60% 25%;
-    --sidebar-accent-foreground: 220 20% 95%;
-    --sidebar-border: 220 50% 25%;
-    --sidebar-ring: 38 92% 50%;
+    --sidebar-primary-foreground: 199 95% 10%;
+    --sidebar-accent: 199 85% 45%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 199 75% 40%;
+    --sidebar-ring: 199 95% 52%;
     
-    /* Role-based Colors (DGIHub specific) */
-    --mitra-primary: 250 84% 67%;
-    --mitra-secondary: 250 84% 57%;
+    /* Role-based Colors (DGIHub specific) - Updated with new blue */
+    --mitra-primary: 199 95% 52%;
+    --mitra-secondary: 199 85% 45%;
     --talenta-primary: 38 92% 50%;
     --talenta-secondary: 38 92% 40%;
-    --industri-primary: 217 91% 60%;
-    --industri-secondary: 217 91% 50%;
+    --industri-primary: 199 95% 52%;
+    --industri-secondary: 199 85% 45%;
   }
 
   .dark {

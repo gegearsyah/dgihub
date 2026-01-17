@@ -231,6 +231,38 @@ class ApiClient {
     return this.request(`/mitra/workshops/${workshopId}/attendance`);
   }
 
+  async updateWorkshop(workshopId: string, workshopData: any) {
+    return this.request(`/mitra/workshops/${workshopId}`, {
+      method: 'PUT',
+      body: JSON.stringify(workshopData),
+    });
+  }
+
+  async deleteWorkshop(workshopId: string) {
+    return this.request(`/mitra/workshops/${workshopId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Profile endpoints
+  async getProfile() {
+    return this.request('/auth/profile');
+  }
+
+  async updateMitraProfile(profileData: any) {
+    return this.request('/mitra/profile', {
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+    });
+  }
+
+  async updateIndustriProfile(profileData: any) {
+    return this.request('/industri/profile', {
+      method: 'PUT',
+      body: JSON.stringify(profileData),
+    });
+  }
+
   // Industri endpoints
   async searchTalenta(filters?: any) {
     const params = new URLSearchParams();

@@ -24,12 +24,12 @@ export const colors = {
     light: '#0D1B2A',
   },
   
-  // Role-based Accent Colors (Maintained for differentiation)
+  // Role-based Accent Colors (Updated with new professional blue)
   mitra: {
-    primary: '#6366f1',
-    secondary: '#4f46e5',
-    accent: '#818cf8',
-    dark: '#312e81',
+    primary: '#0EB0F9',
+    secondary: '#0A9DE6',
+    accent: '#3BC0FF',
+    dark: '#0878B3',
   },
   talenta: {
     primary: '#f59e0b',
@@ -38,10 +38,10 @@ export const colors = {
     dark: '#92400e',
   },
   industri: {
-    primary: '#3b82f6',
-    secondary: '#2563eb',
-    accent: '#60a5fa',
-    dark: '#1e40af',
+    primary: '#0EB0F9',
+    secondary: '#0A9DE6',
+    accent: '#3BC0FF',
+    dark: '#0878B3',
   },
   
   // Status Colors
@@ -49,7 +49,7 @@ export const colors = {
     success: '#2D6A4F',    // Emerald Green
     warning: '#fbbf24',
     error: '#BA1A1A',      // Crimson
-    info: '#3b82f6',
+    info: '#0EB0F9',       // Professional Blue
     pending: '#f59e0b',
     active: '#2D6A4F',
     inactive: '#6b7280',
