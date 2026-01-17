@@ -41,10 +41,11 @@ export async function GET(request: NextRequest) {
 
     // Build query
     let query = supabaseAdmin
-      .from('courses')
+      .from('kursus')
       .select(`
         *,
-        mitra_profiles!inner(organization_name, profile_id)
+        mitra_profiles!inner(organization_name, profile_id),
+        enrollments!left(enrollment_id, status)
       `)
       .eq('status', 'PUBLISHED')
       .range(offset, offset + limit - 1);
@@ -77,14 +78,37 @@ export async function GET(request: NextRequest) {
 
     // Get total count
     const { count } = await supabaseAdmin
-      .from('courses')
+      .from('kursus')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'PUBLISHED');
+
+    // Transform courses to include provider name and enrollment status
+    const transformedCourses = courses?.map((course: any) => {
+      const providerName = course.mitra_profiles?.organization_name || 'Unknown Provider';
+      const isEnrolled = course.enrollments && course.enrollments.length > 0;
+      
+      return {
+        kursus_id: course.kursus_id,
+        title: course.title,
+        description: course.description,
+        duration_hours: course.duration_hours,
+        duration_days: course.duration_days,
+        price: parseFloat(course.price || 0),
+        skkni_code: course.skkni_code,
+        aqrf_level: course.aqrf_level,
+        delivery_mode: course.delivery_mode || 'ONLINE',
+        provider_name: providerName,
+        provider_id: course.mitra_profiles?.profile_id,
+        is_enrolled: isEnrolled,
+        status: course.status,
+        created_at: course.created_at
+      };
+    }) || [];
 
     return NextResponse.json({
       success: true,
       data: {
-        courses: courses || [],
+        courses: transformedCourses,
         pagination: {
           page,
           limit,

@@ -209,6 +209,23 @@ class ApiClient {
     });
   }
 
+  async updateCourse(courseId: string, courseData: any) {
+    return this.request(`/mitra/courses/${courseId}`, {
+      method: 'PUT',
+      body: JSON.stringify(courseData),
+    });
+  }
+
+  async deleteCourse(courseId: string) {
+    return this.request(`/mitra/courses/${courseId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getCourse(courseId: string) {
+    return this.request(`/mitra/courses/${courseId}`);
+  }
+
   async getCourseParticipants(kursusId: string) {
     return this.request(`/mitra/courses/${kursusId}/participants`);
   }
@@ -347,10 +364,31 @@ class ApiClient {
     });
   }
 
-  async markMaterialComplete(materialId: string) {
+  async markMaterialComplete(materialId: string, progressData?: {
+    progressPercentage?: number;
+    lastPosition?: number;
+    timeSpentSeconds?: number;
+  }) {
     return this.request(`/talenta/materials/${materialId}/complete`, {
       method: 'POST',
+      body: JSON.stringify(progressData || {}),
     });
+  }
+
+  async updateMaterialProgress(materialId: string, progressData: {
+    progressPercentage?: number;
+    lastPosition?: number;
+    timeSpentSeconds?: number;
+    markComplete?: boolean;
+  }) {
+    return this.request(`/talenta/materials/${materialId}/progress`, {
+      method: 'POST',
+      body: JSON.stringify(progressData),
+    });
+  }
+
+  async getMaterialProgress(materialId: string) {
+    return this.request(`/talenta/materials/${materialId}/progress`);
   }
 
   // Quizzes

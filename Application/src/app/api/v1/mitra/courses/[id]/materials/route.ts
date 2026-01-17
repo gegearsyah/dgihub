@@ -38,14 +38,14 @@ export async function GET(
     // Verify course ownership - try both possible column names
     let course;
     const { data: course1 } = await db
-      .from('courses')
+      .from('kursus')
       .select('mitra_id, kursus_id')
       .eq('kursus_id', courseId)
       .single();
     
     if (!course1) {
       const { data: course2 } = await db
-        .from('courses')
+        .from('kursus')
         .select('mitra_id, course_id')
         .eq('course_id', courseId)
         .single();
@@ -146,14 +146,14 @@ export async function POST(
     // Verify course ownership - try both possible column names
     let course;
     const { data: course1 } = await db
-      .from('courses')
+      .from('kursus')
       .select('mitra_id, kursus_id')
       .eq('kursus_id', courseId)
       .single();
     
     if (!course1) {
       const { data: course2 } = await db
-        .from('courses')
+        .from('kursus')
         .select('mitra_id, course_id')
         .eq('course_id', courseId)
         .single();

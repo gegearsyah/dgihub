@@ -23,6 +23,8 @@ export async function POST(
     if (authError) return authError;
 
     const { id: materialId } = await params;
+    const body = await request.json().catch(() => ({}));
+    const { progressPercentage, lastPosition, timeSpentSeconds } = body;
 
     if (!supabaseAdmin) {
       return NextResponse.json(
@@ -70,21 +72,59 @@ export async function POST(
       .eq('talenta_id', user.userId)
       .single();
 
+    // If existing, update with completion data
     if (existing) {
+      const updateData: any = {
+        completed_at: new Date().toISOString(),
+        progress_percentage: 100,
+        updated_at: new Date().toISOString()
+      };
+      if (lastPosition !== undefined) updateData.last_position = parseInt(lastPosition);
+      if (timeSpentSeconds !== undefined) updateData.time_spent_seconds = parseInt(timeSpentSeconds);
+
+      const { data: updated, error: updateError } = await db
+        .from('material_completions')
+        .update(updateData)
+        .eq('materi_id', materialId)
+        .eq('talenta_id', user.userId)
+        .select()
+        .single();
+
+      if (updateError) {
+        console.error('Completion update error:', updateError);
+        return NextResponse.json({
+          success: false,
+          message: 'Failed to update completion'
+        }, { status: 500 });
+      }
+
       return NextResponse.json({
         success: true,
-        message: 'Material already completed',
-        data: existing
+        message: 'Material marked as completed',
+        data: updated
       });
     }
 
-    // Mark as completed
+    // Mark as completed (upsert to handle progress updates)
+    const completionData: any = {
+      materi_id: materialId,
+      talenta_id: user.userId,
+      completed_at: new Date().toISOString(),
+      progress_percentage: 100,
+      updated_at: new Date().toISOString()
+    };
+
+    if (lastPosition !== undefined) {
+      completionData.last_position = parseInt(lastPosition);
+    }
+    if (timeSpentSeconds !== undefined) {
+      completionData.time_spent_seconds = parseInt(timeSpentSeconds);
+    }
+
     const { data: completion, error } = await db
       .from('material_completions')
-      .insert({
-        materi_id: materialId,
-        talenta_id: user.userId,
-        completed_at: new Date().toISOString()
+      .upsert(completionData, {
+        onConflict: 'materi_id,talenta_id'
       })
       .select()
       .single();

@@ -47,12 +47,24 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get courses
+    // Get courses with enrollment and material counts
     const { data: courses, error } = await db
-      .from('courses')
-      .select('*')
+      .from('kursus')
+      .select(`
+        *,
+        enrollments:enrollments(count),
+        materials:materi(count)
+      `)
       .eq('mitra_id', mitraProfile.profile_id)
       .order('created_at', { ascending: false });
+
+    // Transform the data to include counts
+    const coursesWithCounts = courses?.map((course: any) => ({
+      ...course,
+      kursus_id: course.kursus_id,
+      enrollment_count: course.enrollments?.[0]?.count || 0,
+      material_count: course.materials?.[0]?.count || 0
+    })) || [];
 
     if (error) {
       console.error('Courses fetch error:', error);
@@ -64,7 +76,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: courses || []
+      data: coursesWithCounts
     });
   } catch (error: any) {
     console.error('Courses API error:', error);
@@ -87,7 +99,19 @@ export async function POST(request: NextRequest) {
     if (authError) return authError;
 
     const body = await request.json();
-    const { title, description, category, durationHours, skkniCode } = body;
+    const { 
+      title, 
+      description, 
+      category, 
+      durationHours, 
+      durationDays,
+      price,
+      aqrfLevel,
+      skkniCode,
+      skkniName,
+      deliveryMode,
+      status
+    } = body;
 
     if (!supabaseAdmin) {
       return NextResponse.json(
@@ -113,17 +137,33 @@ export async function POST(request: NextRequest) {
     }
 
     // Create course
+    const courseData: any = {
+      mitra_id: mitraProfile.profile_id,
+      title,
+      description,
+      category: category || null,
+      duration_hours: durationHours,
+      price: price ? parseFloat(price) : 0,
+      skkni_code: skkniCode || null,
+      status: status || 'DRAFT'
+    };
+
+    if (aqrfLevel) {
+      courseData.aqrf_level = parseInt(aqrfLevel);
+    }
+    if (durationDays) {
+      courseData.duration_days = parseInt(durationDays);
+    }
+    if (skkniName) {
+      courseData.skkni_name = skkniName;
+    }
+    if (deliveryMode) {
+      courseData.delivery_mode = deliveryMode;
+    }
+
     const { data: course, error } = await db
-      .from('courses')
-      .insert({
-        mitra_id: mitraProfile.profile_id,
-        title,
-        description,
-        category,
-        duration_hours: durationHours,
-        skkni_code: skkniCode,
-        status: 'DRAFT'
-      })
+      .from('kursus')
+      .insert(courseData)
       .select()
       .single();
 

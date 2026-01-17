@@ -16,7 +16,7 @@ Complete checklist of current features and features that still need to be added.
 | **Mitra Portal** | 🟡 Partial | 65% |
 | **Industri Portal** | 🟡 Partial | 70% |
 | **Payment System** | ❌ Not Started | 0% |
-| **Learning Experience** | 🟡 Partial | 50% |
+| **Learning Experience** | 🟡 Partial | 75% |
 | **Certificate System** | 🟡 Partial | 70% |
 | **Workshop System** | 🟡 Partial | 60% |
 | **Job System** | 🟡 Partial | 65% |
@@ -117,6 +117,10 @@ Complete checklist of current features and features that still need to be added.
 - [x] Create new courses
 - [x] Course form with SKKNI/AQRF fields
 - [x] Course status management (DRAFT, PUBLISHED)
+- [x] Course price management
+- [x] Course delivery mode (Online/Offline/Hybrid)
+- [x] Edit/Update course settings
+- [x] Delete course functionality
 - [x] View all courses with enrollment counts
 - [x] View course participants (API ready)
 - [x] Issue certificates (API ready)
@@ -136,6 +140,8 @@ Complete checklist of current features and features that still need to be added.
 - [ ] Workshop location configuration (basic)
 - [ ] GPS attendance tracking (backend ready, UI needs work)
 - [ ] Analytics dashboard (basic metrics only)
+- [ ] Course category management (basic)
+- [ ] Course prerequisites management (structure ready)
 
 ### ❌ Missing Features
 - [ ] File upload for course materials (videos, PDFs, documents)
@@ -265,23 +271,23 @@ Complete checklist of current features and features that still need to be added.
 
 ### ❌ Missing Features
 - [ ] Full video player with:
-  - Playback controls
-  - Progress tracking
-  - Playback speed control
-  - Subtitles/captions
-  - Video quality selection
-  - Resume from last position
+  - [x] Playback controls ✅
+  - [x] Progress tracking ✅
+  - [x] Playback speed control ✅
+  - [ ] Subtitles/captions
+  - [ ] Video quality selection
+  - [x] Resume from last position ✅
 - [ ] PDF/document viewer with:
-  - Page navigation
-  - Zoom controls
-  - Search functionality
-  - Annotation support
+  - [x] Page navigation ✅
+  - [x] Zoom controls ✅
+  - [x] Search functionality ✅
+  - [ ] Annotation support
 - [ ] Interactive quiz system with:
-  - Multiple question types
-  - Timer functionality
-  - Immediate feedback
-  - Score calculation
-  - Retake options
+  - [x] Multiple question types (Multiple Choice, True/False, Short Answer, Essay) ✅
+  - [x] Timer functionality ✅
+  - [x] Immediate feedback ✅
+  - [x] Score calculation ✅
+  - [x] Retake options ✅
 - [ ] Assignment system with:
   - File upload
   - Submission tracking

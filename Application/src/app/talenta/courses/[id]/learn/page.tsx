@@ -38,10 +38,39 @@ export default function LearnPage() {
       const response = await apiClient.getCourseMaterials(courseId);
       if (response.success && response.data) {
         const materialsArray = Array.isArray(response.data) ? response.data : [];
-        setMaterials(materialsArray);
+        
+        // Load progress for each material
+        const materialsWithProgress = await Promise.all(
+          materialsArray.map(async (material: any) => {
+            try {
+              const progressResponse = await apiClient.getMaterialProgress(material.materi_id);
+              if (progressResponse.success && progressResponse.data) {
+                const progressData = progressResponse.data as any;
+                return {
+                  ...material,
+                  completed: (progressData.progress_percentage || 0) >= 100,
+                  progress: progressData.progress_percentage || 0,
+                  lastPosition: progressData.last_position || 0,
+                  timeSpent: progressData.time_spent_seconds || 0
+                };
+              }
+            } catch (error) {
+              console.error(`Failed to load progress for material ${material.materi_id}:`, error);
+            }
+            return {
+              ...material,
+              completed: material.completed || false,
+              progress: 0,
+              lastPosition: 0,
+              timeSpent: 0
+            };
+          })
+        );
+        
+        setMaterials(materialsWithProgress);
         // Set first incomplete material or first material
-        const incomplete = materialsArray.find((m: any) => !m.completed);
-        setCurrentMaterial(incomplete || materialsArray[0]);
+        const incomplete = materialsWithProgress.find((m: any) => !m.completed);
+        setCurrentMaterial(incomplete || materialsWithProgress[0]);
       }
     } catch (error) {
       console.error('Failed to load materials:', error);
@@ -185,16 +214,30 @@ export default function LearnPage() {
                       </span>
                     </div>
                     {material.completed ? (
-                      <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#0EB0F9] shrink-0" />
+                    ) : material.progress > 0 ? (
+                      <div className="w-4 h-4 rounded-full border-2 border-[#0EB0F9] shrink-0 flex items-center justify-center">
+                        <div 
+                          className="w-2 h-2 rounded-full bg-[#0EB0F9]"
+                          style={{ opacity: material.progress / 100 }}
+                        />
+                      </div>
                     ) : (
                       <Circle className="w-4 h-4 text-muted-foreground shrink-0" />
                     )}
                   </div>
-                  {material.duration_seconds && (
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {Math.floor(material.duration_seconds / 60)} min
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2 mt-1">
+                    {material.duration_seconds && (
+                      <div className="text-xs text-muted-foreground">
+                        {Math.floor(material.duration_seconds / 60)} min
+                      </div>
+                    )}
+                    {material.progress > 0 && material.progress < 100 && (
+                      <div className="text-xs text-[#0EB0F9]">
+                        {Math.round(material.progress)}% complete
+                      </div>
+                    )}
+                  </div>
                 </button>
               );
             })}
@@ -220,6 +263,7 @@ export default function LearnPage() {
                   <VideoPlayer
                     src={currentMaterial.file_url}
                     title={currentMaterial.title}
+                    materialId={currentMaterial.materi_id}
                     onComplete={handleMaterialComplete}
                   />
                 )}
@@ -232,6 +276,7 @@ export default function LearnPage() {
                       src={currentMaterial.file_url}
                       title={currentMaterial.title}
                       fileType={currentMaterial.file_type}
+                      materialId={currentMaterial.materi_id}
                       onComplete={handleMaterialComplete}
                     />
                   )}

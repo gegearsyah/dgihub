@@ -14,8 +14,9 @@ interface Course {
   description: string;
   duration_hours: number;
   price: number;
-  skkni_code: string;
-  aqrf_level: number;
+  skkni_code?: string;
+  aqrf_level?: number;
+  delivery_mode?: string;
   provider_name: string;
   is_enrolled: boolean;
 }
@@ -216,6 +217,16 @@ export default function CoursesPage() {
                       <span className={isDark ? 'text-[#E0E1DD]' : 'text-[#0D1B2A]'}>Level {course.aqrf_level}</span>
                     </div>
                   )}
+                  <div className="flex justify-between text-sm">
+                    <span className={isDark ? 'text-[#C5C6C0]' : 'text-gray-500'}>Delivery:</span>
+                    <span className={`font-medium ${
+                      isDark ? 'text-[#E0E1DD]' : 'text-[#0D1B2A]'
+                    }`}>
+                      {course.delivery_mode === 'ONLINE' ? 'Online' : 
+                       course.delivery_mode === 'OFFLINE' ? 'Offline' : 
+                       course.delivery_mode === 'HYBRID' ? 'Hybrid' : 'Online'}
+                    </span>
+                  </div>
                   <div className="flex justify-between text-sm">
                     <span className={isDark ? 'text-[#C5C6C0]' : 'text-gray-500'}>Price:</span>
                     <span className={`font-semibold ${
